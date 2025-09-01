@@ -22,6 +22,7 @@ Partial Class FormLogin
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FormLogin))
         LUsuario = New Label()
         TBContrasenia = New TextBox()
         BSalir = New Button()
@@ -31,9 +32,12 @@ Partial Class FormLogin
         TableLayoutPanel1 = New TableLayoutPanel()
         Panel1 = New Panel()
         TableLayoutPanel3 = New TableLayoutPanel()
+        TableLayoutPanel2 = New TableLayoutPanel()
+        Panel2 = New Panel()
         TableLayoutPanel1.SuspendLayout()
         Panel1.SuspendLayout()
         TableLayoutPanel3.SuspendLayout()
+        TableLayoutPanel2.SuspendLayout()
         SuspendLayout()
         ' 
         ' LUsuario
@@ -106,6 +110,7 @@ Partial Class FormLogin
         TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 33F))
         TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 34F))
         TableLayoutPanel1.Controls.Add(Panel1, 1, 1)
+        TableLayoutPanel1.Controls.Add(TableLayoutPanel2, 1, 0)
         TableLayoutPanel1.Dock = DockStyle.Fill
         TableLayoutPanel1.Location = New Point(0, 0)
         TableLayoutPanel1.Name = "TableLayoutPanel1"
@@ -146,6 +151,33 @@ Partial Class FormLogin
         TableLayoutPanel3.Size = New Size(320, 209)
         TableLayoutPanel3.TabIndex = 0
         ' 
+        ' TableLayoutPanel2
+        ' 
+        TableLayoutPanel2.ColumnCount = 3
+        TableLayoutPanel2.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 25F))
+        TableLayoutPanel2.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50F))
+        TableLayoutPanel2.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 25F))
+        TableLayoutPanel2.Controls.Add(Panel2, 1, 1)
+        TableLayoutPanel2.Dock = DockStyle.Fill
+        TableLayoutPanel2.Location = New Point(329, 3)
+        TableLayoutPanel2.Name = "TableLayoutPanel2"
+        TableLayoutPanel2.RowCount = 3
+        TableLayoutPanel2.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
+        TableLayoutPanel2.RowStyles.Add(New RowStyle(SizeType.Percent, 50F))
+        TableLayoutPanel2.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
+        TableLayoutPanel2.Size = New Size(320, 209)
+        TableLayoutPanel2.TabIndex = 1
+        ' 
+        ' Panel2
+        ' 
+        Panel2.BackgroundImage = My.Resources.Resources.Logo
+        Panel2.BackgroundImageLayout = ImageLayout.Zoom
+        Panel2.Dock = DockStyle.Fill
+        Panel2.Location = New Point(83, 55)
+        Panel2.Name = "Panel2"
+        Panel2.Size = New Size(154, 98)
+        Panel2.TabIndex = 0
+        ' 
         ' FormLogin
         ' 
         AutoScaleDimensions = New SizeF(8F, 20F)
@@ -153,6 +185,7 @@ Partial Class FormLogin
         BackColor = Color.LightGray
         ClientSize = New Size(988, 654)
         Controls.Add(TableLayoutPanel1)
+        Icon = CType(resources.GetObject("$this.Icon"), Icon)
         Name = "FormLogin"
         Text = "Inicio Sesion"
         WindowState = FormWindowState.Maximized
@@ -160,6 +193,7 @@ Partial Class FormLogin
         Panel1.ResumeLayout(False)
         TableLayoutPanel3.ResumeLayout(False)
         TableLayoutPanel3.PerformLayout()
+        TableLayoutPanel2.ResumeLayout(False)
         ResumeLayout(False)
     End Sub
     Friend WithEvents LUsuario As Label
@@ -171,5 +205,7 @@ Partial Class FormLogin
     Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
     Friend WithEvents Panel1 As Panel
     Friend WithEvents TableLayoutPanel3 As TableLayoutPanel
+    Friend WithEvents TableLayoutPanel2 As TableLayoutPanel
+    Friend WithEvents Panel2 As Panel
 
 End Class

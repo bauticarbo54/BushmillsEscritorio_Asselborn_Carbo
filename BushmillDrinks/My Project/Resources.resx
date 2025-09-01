@@ -121,22 +121,25 @@
   <data name="iconoUsuarios" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>iconoUsuarios.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="iconoReportes" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>iconoReportes.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="iconoProductos" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>iconoProductos.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="iconoClientes" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>iconoClientes.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="iconoFinanzas" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>iconoFinanzas.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="iconoReportes" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>iconoReportes.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="iconoSalir" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>iconoSalir.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="iconoBackup" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>iconoBackup.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="iconoSalir" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>iconoSalir.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="iconoFinanzas" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>iconoFinanzas.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Logo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

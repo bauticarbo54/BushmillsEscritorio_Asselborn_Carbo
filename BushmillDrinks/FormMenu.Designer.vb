@@ -22,6 +22,7 @@ Partial Class FormMenu
     'No lo modifique con el editor de código.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FormMenu))
         POperaciones = New Panel()
         TableLayoutPanel1 = New TableLayoutPanel()
         BSalir = New Button()
@@ -199,6 +200,7 @@ Partial Class FormMenu
         ' 
         ' PanelGeneral
         ' 
+        PanelGeneral.AutoSize = True
         PanelGeneral.BackColor = Color.LightGray
         PanelGeneral.Dock = DockStyle.Fill
         PanelGeneral.Location = New Point(0, 125)
@@ -213,12 +215,14 @@ Partial Class FormMenu
         ClientSize = New Size(929, 450)
         Controls.Add(PanelGeneral)
         Controls.Add(POperaciones)
+        Icon = CType(resources.GetObject("$this.Icon"), Icon)
         Name = "FormMenu"
         Text = "Menú"
         WindowState = FormWindowState.Maximized
         POperaciones.ResumeLayout(False)
         TableLayoutPanel1.ResumeLayout(False)
         ResumeLayout(False)
+        PerformLayout()
     End Sub
 
     Friend WithEvents POperaciones As Panel
