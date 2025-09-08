@@ -109,7 +109,7 @@ Partial Class FormProductos
         TableLayoutPanel1.Location = New Point(0, 0)
         TableLayoutPanel1.Name = "TableLayoutPanel1"
         TableLayoutPanel1.RowCount = 1
-        TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 100F))
         TableLayoutPanel1.Size = New Size(800, 125)
         TableLayoutPanel1.TabIndex = 0
         ' 
@@ -155,10 +155,10 @@ Partial Class FormProductos
         ' TableLayoutPanel2
         ' 
         TableLayoutPanel2.ColumnCount = 4
-        TableLayoutPanel2.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 25.0F))
-        TableLayoutPanel2.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 25.0F))
-        TableLayoutPanel2.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 25.0F))
-        TableLayoutPanel2.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 25.0F))
+        TableLayoutPanel2.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 20.0F))
+        TableLayoutPanel2.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 30.0F))
+        TableLayoutPanel2.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 20.0F))
+        TableLayoutPanel2.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 30.0F))
         TableLayoutPanel2.Controls.Add(LCodigoBarra, 0, 0)
         TableLayoutPanel2.Controls.Add(TBCodBarra, 1, 0)
         TableLayoutPanel2.Controls.Add(CBCategoria, 1, 1)
@@ -183,9 +183,9 @@ Partial Class FormProductos
         ' 
         ' LCodigoBarra
         ' 
-        LCodigoBarra.Anchor = AnchorStyles.None
+        LCodigoBarra.Anchor = AnchorStyles.Right
         LCodigoBarra.AutoSize = True
-        LCodigoBarra.Location = New Point(36, 10)
+        LCodigoBarra.Location = New Point(30, 10)
         LCodigoBarra.Name = "LCodigoBarra"
         LCodigoBarra.Size = New Size(127, 20)
         LCodigoBarra.TabIndex = 0
@@ -194,7 +194,7 @@ Partial Class FormProductos
         ' TBCodBarra
         ' 
         TBCodBarra.Anchor = AnchorStyles.Left
-        TBCodBarra.Location = New Point(203, 7)
+        TBCodBarra.Location = New Point(163, 7)
         TBCodBarra.Name = "TBCodBarra"
         TBCodBarra.Size = New Size(150, 27)
         TBCodBarra.TabIndex = 1
@@ -203,7 +203,7 @@ Partial Class FormProductos
         ' 
         CBCategoria.Anchor = AnchorStyles.Left
         CBCategoria.FormattingEnabled = True
-        CBCategoria.Location = New Point(203, 47)
+        CBCategoria.Location = New Point(163, 47)
         CBCategoria.Name = "CBCategoria"
         CBCategoria.Size = New Size(151, 28)
         CBCategoria.TabIndex = 2
@@ -211,9 +211,9 @@ Partial Class FormProductos
         ' 
         ' CBMarca
         ' 
-        CBMarca.Anchor = AnchorStyles.None
+        CBMarca.Anchor = AnchorStyles.Right
         CBMarca.FormattingEnabled = True
-        CBMarca.Location = New Point(24, 47)
+        CBMarca.Location = New Point(6, 47)
         CBMarca.Name = "CBMarca"
         CBMarca.Size = New Size(151, 28)
         CBMarca.TabIndex = 3
@@ -221,9 +221,9 @@ Partial Class FormProductos
         ' 
         ' LPrecio
         ' 
-        LPrecio.Anchor = AnchorStyles.None
+        LPrecio.Anchor = AnchorStyles.Right
         LPrecio.AutoSize = True
-        LPrecio.Location = New Point(73, 93)
+        LPrecio.Location = New Point(104, 93)
         LPrecio.Name = "LPrecio"
         LPrecio.Size = New Size(53, 20)
         LPrecio.TabIndex = 4
@@ -233,7 +233,7 @@ Partial Class FormProductos
         ' 
         NUDPrecio.Anchor = AnchorStyles.Left
         NUDPrecio.DecimalPlaces = 2
-        NUDPrecio.Location = New Point(203, 90)
+        NUDPrecio.Location = New Point(163, 90)
         NUDPrecio.Maximum = New Decimal(New Integer() {100000000, 0, 0, 0})
         NUDPrecio.Name = "NUDPrecio"
         NUDPrecio.Size = New Size(150, 27)
@@ -241,9 +241,9 @@ Partial Class FormProductos
         ' 
         ' LVolumen
         ' 
-        LVolumen.Anchor = AnchorStyles.None
+        LVolumen.Anchor = AnchorStyles.Right
         LVolumen.AutoSize = True
-        LVolumen.Location = New Point(465, 10)
+        LVolumen.Location = New Point(487, 10)
         LVolumen.Name = "LVolumen"
         LVolumen.Size = New Size(70, 20)
         LVolumen.TabIndex = 6
@@ -252,16 +252,16 @@ Partial Class FormProductos
         ' TBVolumen
         ' 
         TBVolumen.Anchor = AnchorStyles.Left
-        TBVolumen.Location = New Point(603, 7)
+        TBVolumen.Location = New Point(563, 7)
         TBVolumen.Name = "TBVolumen"
         TBVolumen.Size = New Size(125, 27)
         TBVolumen.TabIndex = 7
         ' 
         ' LGraduacion
         ' 
-        LGraduacion.Anchor = AnchorStyles.None
+        LGraduacion.Anchor = AnchorStyles.Right
         LGraduacion.AutoSize = True
-        LGraduacion.Location = New Point(460, 51)
+        LGraduacion.Location = New Point(477, 51)
         LGraduacion.Name = "LGraduacion"
         LGraduacion.Size = New Size(80, 20)
         LGraduacion.TabIndex = 8
@@ -270,16 +270,16 @@ Partial Class FormProductos
         ' TBGraduacion
         ' 
         TBGraduacion.Anchor = AnchorStyles.Left
-        TBGraduacion.Location = New Point(603, 48)
+        TBGraduacion.Location = New Point(563, 48)
         TBGraduacion.Name = "TBGraduacion"
         TBGraduacion.Size = New Size(125, 27)
         TBGraduacion.TabIndex = 9
         ' 
         ' LProveedor
         ' 
-        LProveedor.Anchor = AnchorStyles.None
+        LProveedor.Anchor = AnchorStyles.Right
         LProveedor.AutoSize = True
-        LProveedor.Location = New Point(460, 93)
+        LProveedor.Location = New Point(477, 93)
         LProveedor.Name = "LProveedor"
         LProveedor.Size = New Size(80, 20)
         LProveedor.TabIndex = 10
@@ -288,14 +288,14 @@ Partial Class FormProductos
         ' TBProveedor
         ' 
         TBProveedor.Anchor = AnchorStyles.Left
-        TBProveedor.Location = New Point(603, 90)
+        TBProveedor.Location = New Point(563, 90)
         TBProveedor.Name = "TBProveedor"
         TBProveedor.Size = New Size(125, 27)
         TBProveedor.TabIndex = 11
         ' 
         ' FormProductos
         ' 
-        AutoScaleDimensions = New SizeF(8.0F, 20.0F)
+        AutoScaleDimensions = New SizeF(8F, 20F)
         AutoScaleMode = AutoScaleMode.Font
         ClientSize = New Size(800, 450)
         Controls.Add(Panel2)
