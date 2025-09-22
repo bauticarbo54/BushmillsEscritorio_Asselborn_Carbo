@@ -3,40 +3,52 @@
   "WorkspaceRootPath": "C:\\Users\\santi\\OneDrive\\Documents\\Proyecto\\BushmillDrinks\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{4A91019C-E075-402E-9851-6D6C067C0F9A}|BushmillDrinks\\BushmillDrinks.vbproj|c:\\users\\santi\\onedrive\\documents\\proyecto\\bushmilldrinks\\bushmilldrinks\\dataaccess.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
-      "RelativeMoniker": "D:0:0:{4A91019C-E075-402E-9851-6D6C067C0F9A}|BushmillDrinks\\BushmillDrinks.vbproj|solutionrelative:bushmilldrinks\\dataaccess.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{4A91019C-E075-402E-9851-6D6C067C0F9A}|BushmillDrinks\\BushmillDrinks.vbproj|c:\\users\\santi\\onedrive\\documents\\proyecto\\bushmilldrinks\\bushmilldrinks\\formusuarios.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
-      "RelativeMoniker": "D:0:0:{4A91019C-E075-402E-9851-6D6C067C0F9A}|BushmillDrinks\\BushmillDrinks.vbproj|solutionrelative:bushmilldrinks\\formusuarios.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{4A91019C-E075-402E-9851-6D6C067C0F9A}|BushmillDrinks\\BushmillDrinks.vbproj|c:\\users\\santi\\onedrive\\documents\\proyecto\\bushmilldrinks\\bushmilldrinks\\formusuarios.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form",
-      "RelativeMoniker": "D:0:0:{4A91019C-E075-402E-9851-6D6C067C0F9A}|BushmillDrinks\\BushmillDrinks.vbproj|solutionrelative:bushmilldrinks\\formusuarios.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form"
+      "AbsoluteMoniker": "D:0:0:{4A91019C-E075-402E-9851-6D6C067C0F9A}|BushmillDrinks\\BushmillDrinks.vbproj|c:\\users\\santi\\onedrive\\documents\\proyecto\\bushmilldrinks\\bushmilldrinks\\formmenu.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{4A91019C-E075-402E-9851-6D6C067C0F9A}|BushmillDrinks\\BushmillDrinks.vbproj|solutionrelative:bushmilldrinks\\formmenu.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{4A91019C-E075-402E-9851-6D6C067C0F9A}|BushmillDrinks\\BushmillDrinks.vbproj|c:\\users\\santi\\onedrive\\documents\\proyecto\\bushmilldrinks\\bushmilldrinks\\formlogin.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
       "RelativeMoniker": "D:0:0:{4A91019C-E075-402E-9851-6D6C067C0F9A}|BushmillDrinks\\BushmillDrinks.vbproj|solutionrelative:bushmilldrinks\\formlogin.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{4A91019C-E075-402E-9851-6D6C067C0F9A}|BushmillDrinks\\BushmillDrinks.vbproj|c:\\users\\santi\\onedrive\\documents\\proyecto\\bushmilldrinks\\bushmilldrinks\\formmenu.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
-      "RelativeMoniker": "D:0:0:{4A91019C-E075-402E-9851-6D6C067C0F9A}|BushmillDrinks\\BushmillDrinks.vbproj|solutionrelative:bushmilldrinks\\formmenu.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
+      "AbsoluteMoniker": "D:0:0:{4A91019C-E075-402E-9851-6D6C067C0F9A}|BushmillDrinks\\BushmillDrinks.vbproj|c:\\users\\santi\\onedrive\\documents\\proyecto\\bushmilldrinks\\bushmilldrinks\\formlogin.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form",
+      "RelativeMoniker": "D:0:0:{4A91019C-E075-402E-9851-6D6C067C0F9A}|BushmillDrinks\\BushmillDrinks.vbproj|solutionrelative:bushmilldrinks\\formlogin.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4A91019C-E075-402E-9851-6D6C067C0F9A}|BushmillDrinks\\BushmillDrinks.vbproj|c:\\users\\santi\\onedrive\\documents\\proyecto\\bushmilldrinks\\bushmilldrinks\\formusuarios.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form",
+      "RelativeMoniker": "D:0:0:{4A91019C-E075-402E-9851-6D6C067C0F9A}|BushmillDrinks\\BushmillDrinks.vbproj|solutionrelative:bushmilldrinks\\formusuarios.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4A91019C-E075-402E-9851-6D6C067C0F9A}|BushmillDrinks\\BushmillDrinks.vbproj|c:\\users\\santi\\onedrive\\documents\\proyecto\\bushmilldrinks\\bushmilldrinks\\dataaccess.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{4A91019C-E075-402E-9851-6D6C067C0F9A}|BushmillDrinks\\BushmillDrinks.vbproj|solutionrelative:bushmilldrinks\\dataaccess.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4A91019C-E075-402E-9851-6D6C067C0F9A}|BushmillDrinks\\BushmillDrinks.vbproj|c:\\users\\santi\\onedrive\\documents\\proyecto\\bushmilldrinks\\bushmilldrinks\\sessionuser.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{4A91019C-E075-402E-9851-6D6C067C0F9A}|BushmillDrinks\\BushmillDrinks.vbproj|solutionrelative:bushmilldrinks\\sessionuser.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{4A91019C-E075-402E-9851-6D6C067C0F9A}|BushmillDrinks\\BushmillDrinks.vbproj|c:\\users\\santi\\onedrive\\documents\\proyecto\\bushmilldrinks\\bushmilldrinks\\formmenu.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form",
       "RelativeMoniker": "D:0:0:{4A91019C-E075-402E-9851-6D6C067C0F9A}|BushmillDrinks\\BushmillDrinks.vbproj|solutionrelative:bushmilldrinks\\formmenu.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{4A91019C-E075-402E-9851-6D6C067C0F9A}|BushmillDrinks\\BushmillDrinks.vbproj|c:\\users\\santi\\onedrive\\documents\\proyecto\\bushmilldrinks\\bushmilldrinks\\formreportes.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{4A91019C-E075-402E-9851-6D6C067C0F9A}|BushmillDrinks\\BushmillDrinks.vbproj|solutionrelative:bushmilldrinks\\formreportes.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4A91019C-E075-402E-9851-6D6C067C0F9A}|BushmillDrinks\\BushmillDrinks.vbproj|c:\\users\\santi\\onedrive\\documents\\proyecto\\bushmilldrinks\\bushmilldrinks\\formreportes.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form",
+      "RelativeMoniker": "D:0:0:{4A91019C-E075-402E-9851-6D6C067C0F9A}|BushmillDrinks\\BushmillDrinks.vbproj|solutionrelative:bushmilldrinks\\formreportes.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{4A91019C-E075-402E-9851-6D6C067C0F9A}|BushmillDrinks\\BushmillDrinks.vbproj|c:\\users\\santi\\onedrive\\documents\\proyecto\\bushmilldrinks\\bushmilldrinks\\formclientes.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form",
       "RelativeMoniker": "D:0:0:{4A91019C-E075-402E-9851-6D6C067C0F9A}|BushmillDrinks\\BushmillDrinks.vbproj|solutionrelative:bushmilldrinks\\formclientes.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{4A91019C-E075-402E-9851-6D6C067C0F9A}|BushmillDrinks\\BushmillDrinks.vbproj|c:\\users\\santi\\onedrive\\documents\\proyecto\\bushmilldrinks\\bushmilldrinks\\formlogin.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form",
-      "RelativeMoniker": "D:0:0:{4A91019C-E075-402E-9851-6D6C067C0F9A}|BushmillDrinks\\BushmillDrinks.vbproj|solutionrelative:bushmilldrinks\\formlogin.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form"
+      "AbsoluteMoniker": "D:0:0:{4A91019C-E075-402E-9851-6D6C067C0F9A}|BushmillDrinks\\BushmillDrinks.vbproj|c:\\users\\santi\\onedrive\\documents\\proyecto\\bushmilldrinks\\bushmilldrinks\\formbackup.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{4A91019C-E075-402E-9851-6D6C067C0F9A}|BushmillDrinks\\BushmillDrinks.vbproj|solutionrelative:bushmilldrinks\\formbackup.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{4A91019C-E075-402E-9851-6D6C067C0F9A}|BushmillDrinks\\BushmillDrinks.vbproj|c:\\users\\santi\\onedrive\\documents\\proyecto\\bushmilldrinks\\bushmilldrinks\\formventas.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
-      "RelativeMoniker": "D:0:0:{4A91019C-E075-402E-9851-6D6C067C0F9A}|BushmillDrinks\\BushmillDrinks.vbproj|solutionrelative:bushmilldrinks\\formventas.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
+      "AbsoluteMoniker": "D:0:0:{4A91019C-E075-402E-9851-6D6C067C0F9A}|BushmillDrinks\\BushmillDrinks.vbproj|c:\\users\\santi\\onedrive\\documents\\proyecto\\bushmilldrinks\\bushmilldrinks\\formbackup.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form",
+      "RelativeMoniker": "D:0:0:{4A91019C-E075-402E-9851-6D6C067C0F9A}|BushmillDrinks\\BushmillDrinks.vbproj|solutionrelative:bushmilldrinks\\formbackup.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}|Form"
     }
   ],
   "DocumentGroupContainers": [
@@ -49,122 +61,152 @@
           "SelectedChildIndex": 5,
           "Children": [
             {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "FormVentas.vb",
-              "DocumentMoniker": "C:\\Users\\santi\\OneDrive\\Documents\\Proyecto\\BushmillDrinks\\BushmillDrinks\\FormVentas.vb",
-              "RelativeDocumentMoniker": "BushmillDrinks\\FormVentas.vb",
-              "ToolTip": "C:\\Users\\santi\\OneDrive\\Documents\\Proyecto\\BushmillDrinks\\BushmillDrinks\\FormVentas.vb",
-              "RelativeToolTip": "BushmillDrinks\\FormVentas.vb",
-              "ViewState": "AgIAAOAAAAAAAAAAAIBJwO0AAAALAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
-              "WhenOpened": "2025-09-22T07:41:10.78Z",
-              "IsPinned": true,
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "FormClientes.vb [Dise\u00F1o]",
-              "DocumentMoniker": "C:\\Users\\santi\\OneDrive\\Documents\\Proyecto\\BushmillDrinks\\BushmillDrinks\\FormClientes.vb",
-              "RelativeDocumentMoniker": "BushmillDrinks\\FormClientes.vb",
-              "ToolTip": "C:\\Users\\santi\\OneDrive\\Documents\\Proyecto\\BushmillDrinks\\BushmillDrinks\\FormClientes.vb [Dise\u00F1o]",
-              "RelativeToolTip": "BushmillDrinks\\FormClientes.vb [Dise\u00F1o]",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
-              "WhenOpened": "2025-09-22T08:18:05.267Z",
-              "IsPinned": true,
-              "EditorCaption": " [Dise\u00F1o]"
-            },
-            {
               "$type": "Bookmark",
               "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "FormMenu.vb [Dise\u00F1o]",
-              "DocumentMoniker": "C:\\Users\\santi\\OneDrive\\Documents\\Proyecto\\BushmillDrinks\\BushmillDrinks\\FormMenu.vb",
-              "RelativeDocumentMoniker": "BushmillDrinks\\FormMenu.vb",
-              "ToolTip": "C:\\Users\\santi\\OneDrive\\Documents\\Proyecto\\BushmillDrinks\\BushmillDrinks\\FormMenu.vb [Dise\u00F1o]",
-              "RelativeToolTip": "BushmillDrinks\\FormMenu.vb [Dise\u00F1o]",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
-              "WhenOpened": "2025-09-22T10:02:15.865Z",
-              "EditorCaption": " [Dise\u00F1o]"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "FormLogin.vb",
               "DocumentMoniker": "C:\\Users\\santi\\OneDrive\\Documents\\Proyecto\\BushmillDrinks\\BushmillDrinks\\FormLogin.vb",
               "RelativeDocumentMoniker": "BushmillDrinks\\FormLogin.vb",
               "ToolTip": "C:\\Users\\santi\\OneDrive\\Documents\\Proyecto\\BushmillDrinks\\BushmillDrinks\\FormLogin.vb",
               "RelativeToolTip": "BushmillDrinks\\FormLogin.vb",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAADIAAAAdAAAAAAAAAA==",
+              "ViewState": "AgIAACIAAAAAAAAAAAAQwAMAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
-              "WhenOpened": "2025-09-22T09:59:01.911Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-22T21:39:04.535Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "DataAccess.vb",
-              "DocumentMoniker": "C:\\Users\\santi\\OneDrive\\Documents\\Proyecto\\BushmillDrinks\\BushmillDrinks\\DataAccess.vb",
-              "RelativeDocumentMoniker": "BushmillDrinks\\DataAccess.vb",
-              "ToolTip": "C:\\Users\\santi\\OneDrive\\Documents\\Proyecto\\BushmillDrinks\\BushmillDrinks\\DataAccess.vb",
-              "RelativeToolTip": "BushmillDrinks\\DataAccess.vb",
-              "ViewState": "AgIAAHEAAAAAAAAAAAAkwIQAAAARAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
-              "WhenOpened": "2025-09-22T09:47:43.269Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "FormMenu.vb",
-              "DocumentMoniker": "C:\\Users\\santi\\OneDrive\\Documents\\Proyecto\\BushmillDrinks\\BushmillDrinks\\FormMenu.vb",
-              "RelativeDocumentMoniker": "BushmillDrinks\\FormMenu.vb",
-              "ToolTip": "C:\\Users\\santi\\OneDrive\\Documents\\Proyecto\\BushmillDrinks\\BushmillDrinks\\FormMenu.vb",
-              "RelativeToolTip": "BushmillDrinks\\FormMenu.vb",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAADIAAAArAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
-              "WhenOpened": "2025-09-22T10:02:18.357Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "FormUsuarios.vb",
-              "DocumentMoniker": "C:\\Users\\santi\\OneDrive\\Documents\\Proyecto\\BushmillDrinks\\BushmillDrinks\\FormUsuarios.vb",
-              "RelativeDocumentMoniker": "BushmillDrinks\\FormUsuarios.vb",
-              "ToolTip": "C:\\Users\\santi\\OneDrive\\Documents\\Proyecto\\BushmillDrinks\\BushmillDrinks\\FormUsuarios.vb",
-              "RelativeToolTip": "BushmillDrinks\\FormUsuarios.vb",
-              "ViewState": "AgIAAHQAAAAAAAAAAAAAAIgAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
-              "WhenOpened": "2025-09-22T10:22:53.504Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 2,
               "Title": "FormLogin.vb [Dise\u00F1o]",
               "DocumentMoniker": "C:\\Users\\santi\\OneDrive\\Documents\\Proyecto\\BushmillDrinks\\BushmillDrinks\\FormLogin.vb",
               "RelativeDocumentMoniker": "BushmillDrinks\\FormLogin.vb",
               "ToolTip": "C:\\Users\\santi\\OneDrive\\Documents\\Proyecto\\BushmillDrinks\\BushmillDrinks\\FormLogin.vb [Dise\u00F1o]",
               "RelativeToolTip": "BushmillDrinks\\FormLogin.vb [Dise\u00F1o]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
-              "WhenOpened": "2025-09-22T09:59:00.352Z",
+              "WhenOpened": "2025-09-22T21:39:02.032Z",
               "EditorCaption": " [Dise\u00F1o]"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 5,
+              "Title": "SessionUser.vb",
+              "DocumentMoniker": "C:\\Users\\santi\\OneDrive\\Documents\\Proyecto\\BushmillDrinks\\BushmillDrinks\\SessionUser.vb",
+              "RelativeDocumentMoniker": "BushmillDrinks\\SessionUser.vb",
+              "ToolTip": "C:\\Users\\santi\\OneDrive\\Documents\\Proyecto\\BushmillDrinks\\BushmillDrinks\\SessionUser.vb",
+              "RelativeToolTip": "BushmillDrinks\\SessionUser.vb",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2025-09-22T21:38:24.618Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "FormUsuarios.vb [Dise\u00F1o]",
               "DocumentMoniker": "C:\\Users\\santi\\OneDrive\\Documents\\Proyecto\\BushmillDrinks\\BushmillDrinks\\FormUsuarios.vb",
               "RelativeDocumentMoniker": "BushmillDrinks\\FormUsuarios.vb",
               "ToolTip": "C:\\Users\\santi\\OneDrive\\Documents\\Proyecto\\BushmillDrinks\\BushmillDrinks\\FormUsuarios.vb [Dise\u00F1o]",
               "RelativeToolTip": "BushmillDrinks\\FormUsuarios.vb [Dise\u00F1o]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
-              "WhenOpened": "2025-09-22T06:23:07.87Z",
+              "WhenOpened": "2025-09-22T21:38:12.117Z",
+              "EditorCaption": " [Dise\u00F1o]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "FormMenu.vb",
+              "DocumentMoniker": "C:\\Users\\santi\\OneDrive\\Documents\\Proyecto\\BushmillDrinks\\BushmillDrinks\\FormMenu.vb",
+              "RelativeDocumentMoniker": "BushmillDrinks\\FormMenu.vb",
+              "ToolTip": "C:\\Users\\santi\\OneDrive\\Documents\\Proyecto\\BushmillDrinks\\BushmillDrinks\\FormMenu.vb",
+              "RelativeToolTip": "BushmillDrinks\\FormMenu.vb",
+              "ViewState": "AgIAAGQAAAAAAAAAAAA/wCoAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2025-09-22T21:36:34.438Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "FormMenu.vb [Dise\u00F1o]",
+              "DocumentMoniker": "C:\\Users\\santi\\OneDrive\\Documents\\Proyecto\\BushmillDrinks\\BushmillDrinks\\FormMenu.vb",
+              "RelativeDocumentMoniker": "BushmillDrinks\\FormMenu.vb",
+              "ToolTip": "C:\\Users\\santi\\OneDrive\\Documents\\Proyecto\\BushmillDrinks\\BushmillDrinks\\FormMenu.vb [Dise\u00F1o]",
+              "RelativeToolTip": "BushmillDrinks\\FormMenu.vb [Dise\u00F1o]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2025-09-22T21:36:10.73Z",
+              "EditorCaption": " [Dise\u00F1o]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "FormReportes.vb",
+              "DocumentMoniker": "C:\\Users\\santi\\OneDrive\\Documents\\Proyecto\\BushmillDrinks\\BushmillDrinks\\FormReportes.vb",
+              "RelativeDocumentMoniker": "BushmillDrinks\\FormReportes.vb",
+              "ToolTip": "C:\\Users\\santi\\OneDrive\\Documents\\Proyecto\\BushmillDrinks\\BushmillDrinks\\FormReportes.vb",
+              "RelativeToolTip": "BushmillDrinks\\FormReportes.vb",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAI8AAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2025-09-22T21:10:49.77Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "FormBackUp.vb",
+              "DocumentMoniker": "C:\\Users\\santi\\OneDrive\\Documents\\Proyecto\\BushmillDrinks\\BushmillDrinks\\FormBackUp.vb",
+              "RelativeDocumentMoniker": "BushmillDrinks\\FormBackUp.vb",
+              "ToolTip": "C:\\Users\\santi\\OneDrive\\Documents\\Proyecto\\BushmillDrinks\\BushmillDrinks\\FormBackUp.vb",
+              "RelativeToolTip": "BushmillDrinks\\FormBackUp.vb",
+              "ViewState": "AgIAAEgAAAAAAAAAAAAswGAAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2025-09-22T20:37:37.426Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "FormClientes.vb [Dise\u00F1o]",
+              "DocumentMoniker": "C:\\Users\\santi\\OneDrive\\Documents\\Proyecto\\BushmillDrinks\\BushmillDrinks\\FormClientes.vb",
+              "RelativeDocumentMoniker": "BushmillDrinks\\FormClientes.vb",
+              "ToolTip": "C:\\Users\\santi\\OneDrive\\Documents\\Proyecto\\BushmillDrinks\\BushmillDrinks\\FormClientes.vb [Dise\u00F1o]",
+              "RelativeToolTip": "BushmillDrinks\\FormClientes.vb [Dise\u00F1o]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2025-09-22T20:26:24.283Z",
+              "EditorCaption": " [Dise\u00F1o]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "FormBackUp.vb [Dise\u00F1o]",
+              "DocumentMoniker": "C:\\Users\\santi\\OneDrive\\Documents\\Proyecto\\BushmillDrinks\\BushmillDrinks\\FormBackUp.vb",
+              "RelativeDocumentMoniker": "BushmillDrinks\\FormBackUp.vb",
+              "ToolTip": "C:\\Users\\santi\\OneDrive\\Documents\\Proyecto\\BushmillDrinks\\BushmillDrinks\\FormBackUp.vb [Dise\u00F1o]",
+              "RelativeToolTip": "BushmillDrinks\\FormBackUp.vb [Dise\u00F1o]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2025-09-22T20:22:04.001Z",
+              "EditorCaption": " [Dise\u00F1o]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "DataAccess.vb",
+              "DocumentMoniker": "C:\\Users\\santi\\OneDrive\\Documents\\Proyecto\\BushmillDrinks\\BushmillDrinks\\DataAccess.vb",
+              "RelativeDocumentMoniker": "BushmillDrinks\\DataAccess.vb",
+              "ToolTip": "C:\\Users\\santi\\OneDrive\\Documents\\Proyecto\\BushmillDrinks\\BushmillDrinks\\DataAccess.vb",
+              "RelativeToolTip": "BushmillDrinks\\DataAccess.vb",
+              "ViewState": "AgIAAG0AAAAAAAAAAADwv4QAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2025-09-22T09:47:43.269Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "FormReportes.vb [Dise\u00F1o]",
+              "DocumentMoniker": "C:\\Users\\santi\\OneDrive\\Documents\\Proyecto\\BushmillDrinks\\BushmillDrinks\\FormReportes.vb",
+              "RelativeDocumentMoniker": "BushmillDrinks\\FormReportes.vb",
+              "ToolTip": "C:\\Users\\santi\\OneDrive\\Documents\\Proyecto\\BushmillDrinks\\BushmillDrinks\\FormReportes.vb [Dise\u00F1o]",
+              "RelativeToolTip": "BushmillDrinks\\FormReportes.vb [Dise\u00F1o]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
+              "WhenOpened": "2025-09-22T20:48:02.465Z",
               "EditorCaption": " [Dise\u00F1o]"
             }
           ]

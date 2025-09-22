@@ -46,7 +46,7 @@ Public Class FormMenu
 
     Private Sub SetAllDisabled()
         ApplyButtonState(BUsuarios, False)
-        ApplyButtonState(BBuckup, False) ' ojo: tu botón se llama BBuckup
+        ApplyButtonState(BBuckup, False)
         ApplyButtonState(BReportes, False)
         ApplyButtonState(BProductos, False)
         ApplyButtonState(BClientes, False)

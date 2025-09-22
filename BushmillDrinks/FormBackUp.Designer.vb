@@ -24,56 +24,113 @@ Partial Class FormBackUp
     Private Sub InitializeComponent()
         Panel1 = New Panel()
         TableLayoutPanel1 = New TableLayoutPanel()
-        LTituloUsuarios = New Label()
+        LDb = New Label()
+        CBDb = New ComboBox()
+        BBackup = New Button()
+        BRestore = New Button()
+        PB = New ProgressBar()
+        LStatus = New Label()
         Panel1.SuspendLayout()
         TableLayoutPanel1.SuspendLayout()
         SuspendLayout()
         ' 
         ' Panel1
         ' 
-        Panel1.BackColor = Color.DarkGray
+        Panel1.BackColor = Color.LightGray
         Panel1.BorderStyle = BorderStyle.FixedSingle
         Panel1.Controls.Add(TableLayoutPanel1)
         Panel1.Dock = DockStyle.Top
         Panel1.Location = New Point(0, 0)
         Panel1.Name = "Panel1"
-        Panel1.Size = New Size(800, 125)
+        Panel1.Size = New Size(800, 153)
         Panel1.TabIndex = 0
         ' 
         ' TableLayoutPanel1
         ' 
-        TableLayoutPanel1.BackColor = Color.Silver
-        TableLayoutPanel1.ColumnCount = 3
-        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 33.3333321F))
-        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 33.3333321F))
-        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 33.3333321F))
-        TableLayoutPanel1.Controls.Add(LTituloUsuarios, 1, 0)
+        TableLayoutPanel1.BackColor = Color.LightGray
+        TableLayoutPanel1.ColumnCount = 4
+        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 20F))
+        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 30F))
+        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 20F))
+        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 30F))
+        TableLayoutPanel1.Controls.Add(LDb, 0, 0)
+        TableLayoutPanel1.Controls.Add(CBDb, 1, 0)
+        TableLayoutPanel1.Controls.Add(BBackup, 0, 1)
+        TableLayoutPanel1.Controls.Add(BRestore, 2, 1)
+        TableLayoutPanel1.Controls.Add(PB, 1, 2)
+        TableLayoutPanel1.Controls.Add(LStatus, 0, 3)
         TableLayoutPanel1.Dock = DockStyle.Fill
         TableLayoutPanel1.Location = New Point(0, 0)
         TableLayoutPanel1.Name = "TableLayoutPanel1"
-        TableLayoutPanel1.RowCount = 1
-        TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 100F))
-        TableLayoutPanel1.Size = New Size(798, 123)
-        TableLayoutPanel1.TabIndex = 1
+        TableLayoutPanel1.RowCount = 4
+        TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
+        TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
+        TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
+        TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
+        TableLayoutPanel1.Size = New Size(798, 151)
+        TableLayoutPanel1.TabIndex = 2
         ' 
-        ' LTituloUsuarios
+        ' LDb
         ' 
-        LTituloUsuarios.Anchor = AnchorStyles.None
-        LTituloUsuarios.AutoSize = True
-        LTituloUsuarios.Font = New Font("Algerian", 16.2F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
-        LTituloUsuarios.Location = New Point(295, 30)
-        LTituloUsuarios.Name = "LTituloUsuarios"
-        LTituloUsuarios.RightToLeft = RightToLeft.No
-        LTituloUsuarios.Size = New Size(204, 62)
-        LTituloUsuarios.TabIndex = 0
-        LTituloUsuarios.Text = "RESPALDO DE DATOS"
-        LTituloUsuarios.TextAlign = ContentAlignment.MiddleCenter
+        LDb.Anchor = AnchorStyles.Right
+        LDb.AutoSize = True
+        LDb.Location = New Point(51, 8)
+        LDb.Name = "LDb"
+        LDb.Size = New Size(105, 20)
+        LDb.TabIndex = 2
+        LDb.Text = "Base de datos:"
+        ' 
+        ' CBDb
+        ' 
+        CBDb.Anchor = AnchorStyles.Left
+        CBDb.FormattingEnabled = True
+        CBDb.Location = New Point(162, 3)
+        CBDb.Name = "CBDb"
+        CBDb.Size = New Size(151, 28)
+        CBDb.TabIndex = 7
+        ' 
+        ' BBackup
+        ' 
+        BBackup.Anchor = AnchorStyles.None
+        BBackup.Location = New Point(17, 41)
+        BBackup.Name = "BBackup"
+        BBackup.Size = New Size(124, 29)
+        BBackup.TabIndex = 8
+        BBackup.Text = "Crear Backup"
+        BBackup.UseVisualStyleBackColor = True
+        ' 
+        ' BRestore
+        ' 
+        BRestore.Anchor = AnchorStyles.None
+        BRestore.Location = New Point(415, 41)
+        BRestore.Name = "BRestore"
+        BRestore.Size = New Size(124, 29)
+        BRestore.TabIndex = 9
+        BRestore.Text = "Restaurar"
+        BRestore.UseVisualStyleBackColor = True
+        ' 
+        ' PB
+        ' 
+        PB.Location = New Point(162, 77)
+        PB.Name = "PB"
+        PB.Size = New Size(125, 29)
+        PB.TabIndex = 10
+        ' 
+        ' LStatus
+        ' 
+        LStatus.Anchor = AnchorStyles.Right
+        LStatus.AutoSize = True
+        LStatus.Location = New Point(99, 121)
+        LStatus.Name = "LStatus"
+        LStatus.Size = New Size(57, 20)
+        LStatus.TabIndex = 11
+        LStatus.Text = "Estado:"
         ' 
         ' FormBackUp
         ' 
         AutoScaleDimensions = New SizeF(8F, 20F)
         AutoScaleMode = AutoScaleMode.Font
-        BackColor = Color.LightGray
+        BackColor = SystemColors.ControlDark
         ClientSize = New Size(800, 450)
         Controls.Add(Panel1)
         Name = "FormBackUp"
@@ -86,5 +143,10 @@ Partial Class FormBackUp
 
     Friend WithEvents Panel1 As Panel
     Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
-    Friend WithEvents LTituloUsuarios As Label
+    Friend WithEvents LDb As Label
+    Friend WithEvents CBDb As ComboBox
+    Friend WithEvents BBackup As Button
+    Friend WithEvents BRestore As Button
+    Friend WithEvents PB As ProgressBar
+    Friend WithEvents LStatus As Label
 End Class
