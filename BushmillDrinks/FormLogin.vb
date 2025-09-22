@@ -1,49 +1,62 @@
 ﻿Public Class FormLogin
-    Private usuarios As New Dictionary(Of String, String) From {
-        {"admin", "admin"},
-        {"vendedor", "1234"},
-        {"gerente", "abcd"}
-    }
+
+    Private Sub FormLogin_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Me.AcceptButton = BIngresar
+        If TypeOf TBContrasenia Is TextBox Then
+            DirectCast(TBContrasenia, TextBox).UseSystemPasswordChar = True
+        End If
+    End Sub
 
     Private Sub BIngresar_Click(sender As Object, e As EventArgs) Handles BIngresar.Click
         Dim user As String = TBUsuario.Text.Trim()
-        Dim pass As String = TBContrasenia.Text.Trim()
+        Dim pass As String = TBContrasenia.Text
 
-        If usuarios.ContainsKey(user) AndAlso usuarios(user) = pass Then
-            MessageBox.Show("Bienvenido " & user, "Login Correcto", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        If String.IsNullOrWhiteSpace(user) OrElse String.IsNullOrWhiteSpace(pass) Then
+            MessageBox.Show("Ingrese usuario y contraseña.", "Validación",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            TBUsuario.Focus() : Exit Sub
+        End If
+
+        Try
+            Dim r = DataAccess.TryLogin(user, pass)
+
+            If Not r.Ok Then
+                ' Si existe pero está inactivo, mensaje específico
+                Dim existePeroInactivo = (r.Estado = "I")
+                If existePeroInactivo Then
+                    MessageBox.Show("El usuario está inactivo. Contacte al gerente.", "Acceso denegado",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                Else
+                    MessageBox.Show("Usuario o contraseña incorrectos.", "Error",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End If
+                TBContrasenia.Clear()
+                TBContrasenia.Focus()
+                Exit Sub
+            End If
+
+            ' Guardar sesión
+            SessionUser.Usuario = user
+            SessionUser.Nombre = r.Nombre
+            SessionUser.Rol = r.Rol
+
+            MessageBox.Show($"Bienvenido {r.Nombre} ({r.Rol})", "Login correcto",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information)
 
             ' Abrir menú principal
             Dim f As New FormMenu()
             Me.Hide()
             f.Show()
-        Else
-            MessageBox.Show("Usuario o contraseña incorrectos", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        End If
+
+        Catch ex As Exception
+            MessageBox.Show("Error al autenticar: " & ex.Message, "Error",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
     End Sub
 
     Private Sub BSalir_Click(sender As Object, e As EventArgs) Handles BSalir.Click
         Application.Exit()
     End Sub
 
-    Private Sub TBContrasenia_TextChanged(sender As Object, e As EventArgs) Handles TBContrasenia.TextChanged
-
-    End Sub
-
-    Private Sub Panel1_Paint(sender As Object, e As PaintEventArgs)
-
-    End Sub
-
-    Private Sub FormLogin_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
-    End Sub
-
-    Private Sub PLogin_Paint(sender As Object, e As PaintEventArgs)
-
-    End Sub
-
-    Private Sub LContrasenia_Click(sender As Object, e As EventArgs) Handles LContrasenia.Click
-
-    End Sub
-
-
 End Class
+

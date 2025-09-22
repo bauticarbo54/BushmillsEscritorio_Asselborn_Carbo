@@ -24,3 +24,16 @@ C:\Users\santi\OneDrive\Documents\Proyecto\BushmillDrinks\BushmillDrinks\obj\Deb
 C:\Users\santi\OneDrive\Documents\Proyecto\BushmillDrinks\BushmillDrinks\obj\Debug\net8.0-windows\BushmillDrinks.FormReportes.resources
 C:\Users\santi\OneDrive\Documents\Proyecto\BushmillDrinks\BushmillDrinks\obj\Debug\net8.0-windows\BushmillDrinks.FormVentas.resources
 C:\Users\santi\OneDrive\Documents\Proyecto\BushmillDrinks\BushmillDrinks\obj\Debug\net8.0-windows\BushmillDrinks.sourcelink.json
+C:\Users\santi\OneDrive\Documents\Proyecto\BushmillDrinks\BushmillDrinks\bin\Debug\net8.0-windows\System.Configuration.ConfigurationManager.dll
+C:\Users\santi\OneDrive\Documents\Proyecto\BushmillDrinks\BushmillDrinks\bin\Debug\net8.0-windows\System.Data.SqlClient.dll
+C:\Users\santi\OneDrive\Documents\Proyecto\BushmillDrinks\BushmillDrinks\bin\Debug\net8.0-windows\System.Diagnostics.EventLog.dll
+C:\Users\santi\OneDrive\Documents\Proyecto\BushmillDrinks\BushmillDrinks\bin\Debug\net8.0-windows\System.Security.Cryptography.ProtectedData.dll
+C:\Users\santi\OneDrive\Documents\Proyecto\BushmillDrinks\BushmillDrinks\bin\Debug\net8.0-windows\runtimes\win-arm64\native\sni.dll
+C:\Users\santi\OneDrive\Documents\Proyecto\BushmillDrinks\BushmillDrinks\bin\Debug\net8.0-windows\runtimes\win-x64\native\sni.dll
+C:\Users\santi\OneDrive\Documents\Proyecto\BushmillDrinks\BushmillDrinks\bin\Debug\net8.0-windows\runtimes\win-x86\native\sni.dll
+C:\Users\santi\OneDrive\Documents\Proyecto\BushmillDrinks\BushmillDrinks\bin\Debug\net8.0-windows\runtimes\unix\lib\net8.0\System.Data.SqlClient.dll
+C:\Users\santi\OneDrive\Documents\Proyecto\BushmillDrinks\BushmillDrinks\bin\Debug\net8.0-windows\runtimes\win\lib\net8.0\System.Data.SqlClient.dll
+C:\Users\santi\OneDrive\Documents\Proyecto\BushmillDrinks\BushmillDrinks\bin\Debug\net8.0-windows\runtimes\win\lib\net8.0\System.Diagnostics.EventLog.Messages.dll
+C:\Users\santi\OneDrive\Documents\Proyecto\BushmillDrinks\BushmillDrinks\bin\Debug\net8.0-windows\runtimes\win\lib\net8.0\System.Diagnostics.EventLog.dll
+C:\Users\santi\OneDrive\Documents\Proyecto\BushmillDrinks\BushmillDrinks\obj\Debug\net8.0-windows\BushmillDrinks.vbproj.AssemblyReference.cache
+C:\Users\santi\OneDrive\Documents\Proyecto\BushmillDrinks\BushmillDrinks\obj\Debug\net8.0-windows\Bushmill.E1EE8A39.Up2Date
