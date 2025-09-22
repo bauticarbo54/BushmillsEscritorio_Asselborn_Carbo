@@ -186,6 +186,4 @@
             BSuspender.ForeColor = Color.White
         End If
     End Sub
-
-
 End Class

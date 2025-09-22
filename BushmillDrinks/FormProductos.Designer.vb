@@ -24,12 +24,12 @@ Partial Class FormProductos
     Private Sub InitializeComponent()
         Panel2 = New Panel()
         Panel1 = New Panel()
-        DGVProductos = New DataGridView()
         Panel4 = New Panel()
+        DGVProductos = New DataGridView()
         TableLayoutPanel1 = New TableLayoutPanel()
-        BEditar = New Button()
         BSuspender = New Button()
         BAgregar = New Button()
+        BEditar = New Button()
         Panel3 = New Panel()
         TableLayoutPanel2 = New TableLayoutPanel()
         LCodigoBarra = New Label()
@@ -42,12 +42,12 @@ Partial Class FormProductos
         TBVolumen = New TextBox()
         LGraduacion = New Label()
         TBGraduacion = New TextBox()
-        LProveedor = New Label()
         TBProveedor = New TextBox()
+        LProveedor = New Label()
         Panel2.SuspendLayout()
         Panel1.SuspendLayout()
-        CType(DGVProductos, ComponentModel.ISupportInitialize).BeginInit()
         Panel4.SuspendLayout()
+        CType(DGVProductos, ComponentModel.ISupportInitialize).BeginInit()
         TableLayoutPanel1.SuspendLayout()
         Panel3.SuspendLayout()
         TableLayoutPanel2.SuspendLayout()
@@ -58,7 +58,6 @@ Partial Class FormProductos
         ' 
         Panel2.BackColor = Color.LightGray
         Panel2.Controls.Add(Panel1)
-        Panel2.Controls.Add(Panel4)
         Panel2.Controls.Add(Panel3)
         Panel2.Dock = DockStyle.Fill
         Panel2.Location = New Point(0, 0)
@@ -69,12 +68,22 @@ Partial Class FormProductos
         ' Panel1
         ' 
         Panel1.AutoSize = True
-        Panel1.Controls.Add(DGVProductos)
+        Panel1.Controls.Add(Panel4)
+        Panel1.Controls.Add(TableLayoutPanel1)
         Panel1.Dock = DockStyle.Fill
         Panel1.Location = New Point(0, 125)
         Panel1.Name = "Panel1"
-        Panel1.Size = New Size(800, 200)
+        Panel1.Size = New Size(800, 325)
         Panel1.TabIndex = 3
+        ' 
+        ' Panel4
+        ' 
+        Panel4.Controls.Add(DGVProductos)
+        Panel4.Dock = DockStyle.Fill
+        Panel4.Location = New Point(0, 64)
+        Panel4.Name = "Panel4"
+        Panel4.Size = New Size(800, 261)
+        Panel4.TabIndex = 4
         ' 
         ' DGVProductos
         ' 
@@ -84,17 +93,8 @@ Partial Class FormProductos
         DGVProductos.Location = New Point(0, 0)
         DGVProductos.Name = "DGVProductos"
         DGVProductos.RowHeadersWidth = 51
-        DGVProductos.Size = New Size(800, 200)
+        DGVProductos.Size = New Size(800, 261)
         DGVProductos.TabIndex = 2
-        ' 
-        ' Panel4
-        ' 
-        Panel4.Controls.Add(TableLayoutPanel1)
-        Panel4.Dock = DockStyle.Bottom
-        Panel4.Location = New Point(0, 325)
-        Panel4.Name = "Panel4"
-        Panel4.Size = New Size(800, 125)
-        Panel4.TabIndex = 1
         ' 
         ' TableLayoutPanel1
         ' 
@@ -102,33 +102,23 @@ Partial Class FormProductos
         TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 33.3333321F))
         TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 33.3333321F))
         TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 33.3333321F))
-        TableLayoutPanel1.Controls.Add(BEditar, 0, 0)
-        TableLayoutPanel1.Controls.Add(BSuspender, 1, 0)
-        TableLayoutPanel1.Controls.Add(BAgregar, 2, 0)
-        TableLayoutPanel1.Dock = DockStyle.Bottom
+        TableLayoutPanel1.Controls.Add(BSuspender, 2, 0)
+        TableLayoutPanel1.Controls.Add(BAgregar, 0, 0)
+        TableLayoutPanel1.Controls.Add(BEditar, 1, 0)
+        TableLayoutPanel1.Dock = DockStyle.Top
         TableLayoutPanel1.Location = New Point(0, 0)
         TableLayoutPanel1.Name = "TableLayoutPanel1"
         TableLayoutPanel1.RowCount = 1
         TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 100F))
-        TableLayoutPanel1.Size = New Size(800, 125)
-        TableLayoutPanel1.TabIndex = 0
-        ' 
-        ' BEditar
-        ' 
-        BEditar.Anchor = AnchorStyles.None
-        BEditar.Location = New Point(86, 48)
-        BEditar.Name = "BEditar"
-        BEditar.Size = New Size(94, 29)
-        BEditar.TabIndex = 0
-        BEditar.Text = "Editar"
-        BEditar.UseVisualStyleBackColor = True
+        TableLayoutPanel1.Size = New Size(800, 64)
+        TableLayoutPanel1.TabIndex = 3
         ' 
         ' BSuspender
         ' 
         BSuspender.Anchor = AnchorStyles.None
-        BSuspender.Location = New Point(352, 48)
+        BSuspender.Location = New Point(596, 13)
         BSuspender.Name = "BSuspender"
-        BSuspender.Size = New Size(94, 29)
+        BSuspender.Size = New Size(140, 37)
         BSuspender.TabIndex = 1
         BSuspender.Text = "Suspender"
         BSuspender.UseVisualStyleBackColor = True
@@ -136,12 +126,22 @@ Partial Class FormProductos
         ' BAgregar
         ' 
         BAgregar.Anchor = AnchorStyles.None
-        BAgregar.Location = New Point(619, 48)
+        BAgregar.Location = New Point(52, 14)
         BAgregar.Name = "BAgregar"
-        BAgregar.Size = New Size(94, 29)
+        BAgregar.Size = New Size(162, 36)
         BAgregar.TabIndex = 2
         BAgregar.Text = "Agregar"
         BAgregar.UseVisualStyleBackColor = True
+        ' 
+        ' BEditar
+        ' 
+        BEditar.Anchor = AnchorStyles.None
+        BEditar.Location = New Point(281, 14)
+        BEditar.Name = "BEditar"
+        BEditar.Size = New Size(236, 35)
+        BEditar.TabIndex = 0
+        BEditar.Text = "Editar"
+        BEditar.UseVisualStyleBackColor = True
         ' 
         ' Panel3
         ' 
@@ -155,10 +155,10 @@ Partial Class FormProductos
         ' TableLayoutPanel2
         ' 
         TableLayoutPanel2.ColumnCount = 4
-        TableLayoutPanel2.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 20.0F))
-        TableLayoutPanel2.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 30.0F))
-        TableLayoutPanel2.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 20.0F))
-        TableLayoutPanel2.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 30.0F))
+        TableLayoutPanel2.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 20F))
+        TableLayoutPanel2.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 30F))
+        TableLayoutPanel2.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 20F))
+        TableLayoutPanel2.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 30F))
         TableLayoutPanel2.Controls.Add(LCodigoBarra, 0, 0)
         TableLayoutPanel2.Controls.Add(TBCodBarra, 1, 0)
         TableLayoutPanel2.Controls.Add(CBCategoria, 1, 1)
@@ -169,15 +169,15 @@ Partial Class FormProductos
         TableLayoutPanel2.Controls.Add(TBVolumen, 3, 0)
         TableLayoutPanel2.Controls.Add(LGraduacion, 2, 1)
         TableLayoutPanel2.Controls.Add(TBGraduacion, 3, 1)
-        TableLayoutPanel2.Controls.Add(LProveedor, 2, 2)
         TableLayoutPanel2.Controls.Add(TBProveedor, 3, 2)
+        TableLayoutPanel2.Controls.Add(LProveedor, 2, 2)
         TableLayoutPanel2.Dock = DockStyle.Top
         TableLayoutPanel2.Location = New Point(0, 0)
         TableLayoutPanel2.Name = "TableLayoutPanel2"
         TableLayoutPanel2.RowCount = 3
-        TableLayoutPanel2.RowStyles.Add(New RowStyle(SizeType.Percent, 33.3333321F))
-        TableLayoutPanel2.RowStyles.Add(New RowStyle(SizeType.Percent, 33.3333321F))
-        TableLayoutPanel2.RowStyles.Add(New RowStyle(SizeType.Percent, 33.3333321F))
+        TableLayoutPanel2.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
+        TableLayoutPanel2.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
+        TableLayoutPanel2.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
         TableLayoutPanel2.Size = New Size(800, 125)
         TableLayoutPanel2.TabIndex = 0
         ' 
@@ -275,6 +275,14 @@ Partial Class FormProductos
         TBGraduacion.Size = New Size(125, 27)
         TBGraduacion.TabIndex = 9
         ' 
+        ' TBProveedor
+        ' 
+        TBProveedor.Anchor = AnchorStyles.Left
+        TBProveedor.Location = New Point(563, 90)
+        TBProveedor.Name = "TBProveedor"
+        TBProveedor.Size = New Size(125, 27)
+        TBProveedor.TabIndex = 11
+        ' 
         ' LProveedor
         ' 
         LProveedor.Anchor = AnchorStyles.Right
@@ -284,14 +292,6 @@ Partial Class FormProductos
         LProveedor.Size = New Size(80, 20)
         LProveedor.TabIndex = 10
         LProveedor.Text = "Proveedor:"
-        ' 
-        ' TBProveedor
-        ' 
-        TBProveedor.Anchor = AnchorStyles.Left
-        TBProveedor.Location = New Point(563, 90)
-        TBProveedor.Name = "TBProveedor"
-        TBProveedor.Size = New Size(125, 27)
-        TBProveedor.TabIndex = 11
         ' 
         ' FormProductos
         ' 
@@ -304,8 +304,8 @@ Partial Class FormProductos
         Panel2.ResumeLayout(False)
         Panel2.PerformLayout()
         Panel1.ResumeLayout(False)
-        CType(DGVProductos, ComponentModel.ISupportInitialize).EndInit()
         Panel4.ResumeLayout(False)
+        CType(DGVProductos, ComponentModel.ISupportInitialize).EndInit()
         TableLayoutPanel1.ResumeLayout(False)
         Panel3.ResumeLayout(False)
         TableLayoutPanel2.ResumeLayout(False)
@@ -314,7 +314,6 @@ Partial Class FormProductos
         ResumeLayout(False)
     End Sub
     Friend WithEvents Panel2 As Panel
-    Friend WithEvents Panel4 As Panel
     Friend WithEvents Panel3 As Panel
     Friend WithEvents TableLayoutPanel2 As TableLayoutPanel
     Friend WithEvents LCodigoBarra As Label
@@ -325,7 +324,6 @@ Partial Class FormProductos
     Friend WithEvents NUDPrecio As NumericUpDown
     Friend WithEvents LVolumen As Label
     Friend WithEvents TBVolumen As TextBox
-    Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
     Friend WithEvents LGraduacion As Label
     Friend WithEvents TBGraduacion As TextBox
     Friend WithEvents LProveedor As Label
@@ -335,4 +333,6 @@ Partial Class FormProductos
     Friend WithEvents BSuspender As Button
     Friend WithEvents BAgregar As Button
     Friend WithEvents Panel1 As Panel
+    Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
+    Friend WithEvents Panel4 As Panel
 End Class

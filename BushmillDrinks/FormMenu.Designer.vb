@@ -138,7 +138,7 @@ Partial Class FormMenu
         BBuckup.Location = New Point(135, 3)
         BBuckup.Name = "BBuckup"
         BBuckup.Size = New Size(126, 119)
-        BBuckup.TabIndex = 7
+        BBuckup.TabIndex = 1
         BBuckup.Text = "BACK UP"
         BBuckup.TextAlign = ContentAlignment.BottomCenter
         BBuckup.TextImageRelation = TextImageRelation.ImageAboveText

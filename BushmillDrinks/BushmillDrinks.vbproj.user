@@ -10,9 +10,6 @@
     <Compile Update="FormReportes.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="FormUsuarios.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Update="FormBackUp.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -20,6 +17,9 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="FormMenu.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="FormUsuarios.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="FormVentas.vb">
