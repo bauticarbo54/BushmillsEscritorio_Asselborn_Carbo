@@ -16,7 +16,7 @@ Imports System.Reflection
 <Assembly: System.Reflection.AssemblyCompanyAttribute("BushmillDrinks"),  _
  Assembly: System.Reflection.AssemblyConfigurationAttribute("Debug"),  _
  Assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0"),  _
- Assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cea6c91b7df698b4ef3c54937b7cff3d7be368ff"),  _
+ Assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+60949fb7f28858d72eef23de25c71e8c88e499d1"),  _
  Assembly: System.Reflection.AssemblyProductAttribute("BushmillDrinks"),  _
  Assembly: System.Reflection.AssemblyTitleAttribute("BushmillDrinks"),  _
  Assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0"),  _

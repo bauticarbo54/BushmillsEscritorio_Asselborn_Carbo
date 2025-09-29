@@ -57,16 +57,16 @@ Public Class FormMenu
         SetAllDisabled()
 
         Select Case rol
-            Case "Gerente"
+            Case "gerente"
                 ApplyButtonState(BUsuarios, True)
                 ApplyButtonState(BBuckup, True)
                 ApplyButtonState(BReportes, True)
 
-            Case "Administrador"
+            Case "administrador"
                 ApplyButtonState(BProductos, True)
                 ApplyButtonState(BReportes, True)
 
-            Case "Vendedor"
+            Case "vendedor"
                 ApplyButtonState(BClientes, True)
                 ApplyButtonState(BVentas, True)
                 ApplyButtonState(BReportes, True)

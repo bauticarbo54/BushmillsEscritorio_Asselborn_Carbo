@@ -21,21 +21,34 @@ Public Class FormReportes
 
     ' --------- mostrar solo las pestañas que corresponden al rol ----------
     Private Sub PrepararTabsPorRol()
+        ' Primero remover todas las pestañas
         For Each tp As TabPage In TC.TabPages
             tp.Parent = Nothing
         Next
 
-        Select Case SessionUser.Rol
-            Case "Gerente"
+        ' Manejo seguro del rol (compatible con todas las versiones de VB.NET)
+        Dim rol As String = ""
+        If SessionUser.Rol IsNot Nothing Then
+            rol = SessionUser.Rol.ToLower()
+        End If
+
+        Select Case rol
+            Case "gerente"
+                ' Gerente ve TODOS los reportes
                 TPGerencia.Parent = TC
                 TPAdmin.Parent = TC
                 TPVendedor.Parent = TC
-            Case "Administrador"
+
+            Case "administrador"
+                ' Administrador ve SOLO reporte de administrador
                 TPAdmin.Parent = TC
-            Case "Vendedor"
+
+            Case "vendedor"
+                ' Vendedor ve SOLO reporte de vendedor
                 TPVendedor.Parent = TC
+
             Case Else
-                ' si no hay sesión, dejo vendedor para testear
+                ' Por defecto, solo vendedor (para testing)
                 TPVendedor.Parent = TC
         End Select
     End Sub

@@ -22,6 +22,7 @@
 
             If Not r.Ok Then
                 ' Si existe pero está inactivo, mensaje específico
+                ' Ahora el estado viene como 'A' o 'I' en lugar de "Activo"/"Inactivo"
                 Dim existePeroInactivo = (r.Estado = "I")
                 If existePeroInactivo Then
                     MessageBox.Show("El usuario está inactivo. Contacte al gerente.", "Acceso denegado",
@@ -38,9 +39,13 @@
             ' Guardar sesión
             SessionUser.Usuario = user
             SessionUser.Nombre = r.Nombre
-            SessionUser.Rol = r.Rol
+            SessionUser.Rol = r.Rol ' Esto vendrá en minúsculas desde BD: "gerente", "administrador", "vendedor"
+            SessionUser.Estado = r.Estado
 
-            MessageBox.Show($"Bienvenido {r.Nombre} ({r.Rol})", "Login correcto",
+            ' Capitalizar el rol para mostrar en el mensaje de bienvenida
+            Dim rolCapitalizado As String = CapitalizarRol(r.Rol)
+
+            MessageBox.Show($"Bienvenido {r.Nombre} ({rolCapitalizado})", "Login correcto",
                             MessageBoxButtons.OK, MessageBoxIcon.Information)
 
             ' Abrir menú principal
@@ -53,6 +58,11 @@
                             MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
+
+    Private Function CapitalizarRol(rol As String) As String
+        If String.IsNullOrEmpty(rol) Then Return rol
+        Return Char.ToUpper(rol(0)) & rol.Substring(1).ToLower()
+    End Function
 
     Private Sub BSalir_Click(sender As Object, e As EventArgs) Handles BSalir.Click
         Application.Exit()

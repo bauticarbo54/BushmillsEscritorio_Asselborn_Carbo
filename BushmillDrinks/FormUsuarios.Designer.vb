@@ -24,29 +24,27 @@ Partial Class FormUsuarios
     Private Sub InitializeComponent()
         Panel1 = New Panel()
         TableLayoutPanel1 = New TableLayoutPanel()
-        BSuspender = New Button()
-        TBUsuario = New TextBox()
-        BEditar = New Button()
         LNombre = New Label()
-        BAgregar = New Button()
-        LUsuario = New Label()
         TBNombre = New TextBox()
+        LRol = New Label()
+        CBRol = New ComboBox()
         LContrasena = New Label()
         TBContrasena = New TextBox()
-        CBRol = New ComboBox()
-        LRol = New Label()
+        LUsuario = New Label()
+        TBUsuario = New TextBox()
+        LApellido = New Label()
+        TBApellido = New TextBox()
+        BSuspender = New Button()
+        BEditar = New Button()
+        BAgregar = New Button()
         Panel2 = New Panel()
         Panel3 = New Panel()
         DGVUsuarios = New DataGridView()
-        Panel4 = New Panel()
-        TableLayoutPanel2 = New TableLayoutPanel()
         Panel1.SuspendLayout()
         TableLayoutPanel1.SuspendLayout()
         Panel2.SuspendLayout()
         Panel3.SuspendLayout()
         CType(DGVUsuarios, ComponentModel.ISupportInitialize).BeginInit()
-        Panel4.SuspendLayout()
-        TableLayoutPanel2.SuspendLayout()
         SuspendLayout()
         ' 
         ' Panel1
@@ -57,94 +55,52 @@ Partial Class FormUsuarios
         Panel1.Dock = DockStyle.Top
         Panel1.Location = New Point(0, 0)
         Panel1.Name = "Panel1"
-        Panel1.Size = New Size(800, 125)
+        Panel1.Size = New Size(800, 188)
         Panel1.TabIndex = 1
         ' 
         ' TableLayoutPanel1
         ' 
         TableLayoutPanel1.BackColor = Color.LightGray
         TableLayoutPanel1.ColumnCount = 4
-        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 20F))
-        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 30F))
-        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 20F))
-        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 30F))
-        TableLayoutPanel1.Controls.Add(BSuspender, 3, 2)
-        TableLayoutPanel1.Controls.Add(TBUsuario, 1, 1)
-        TableLayoutPanel1.Controls.Add(BEditar, 3, 1)
+        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 20.0250931F))
+        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 29.7365112F))
+        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 20.2007523F))
+        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 30.0376415F))
         TableLayoutPanel1.Controls.Add(LNombre, 0, 0)
-        TableLayoutPanel1.Controls.Add(BAgregar, 3, 0)
-        TableLayoutPanel1.Controls.Add(LUsuario, 0, 1)
         TableLayoutPanel1.Controls.Add(TBNombre, 1, 0)
-        TableLayoutPanel1.Controls.Add(LContrasena, 0, 2)
-        TableLayoutPanel1.Controls.Add(TBContrasena, 1, 2)
+        TableLayoutPanel1.Controls.Add(LRol, 0, 4)
+        TableLayoutPanel1.Controls.Add(CBRol, 1, 4)
+        TableLayoutPanel1.Controls.Add(LContrasena, 0, 3)
+        TableLayoutPanel1.Controls.Add(TBContrasena, 1, 3)
+        TableLayoutPanel1.Controls.Add(LUsuario, 0, 2)
+        TableLayoutPanel1.Controls.Add(TBUsuario, 1, 2)
+        TableLayoutPanel1.Controls.Add(LApellido, 0, 1)
+        TableLayoutPanel1.Controls.Add(TBApellido, 1, 1)
+        TableLayoutPanel1.Controls.Add(BSuspender, 3, 3)
+        TableLayoutPanel1.Controls.Add(BEditar, 3, 2)
+        TableLayoutPanel1.Controls.Add(BAgregar, 3, 1)
         TableLayoutPanel1.Dock = DockStyle.Fill
         TableLayoutPanel1.Location = New Point(0, 0)
         TableLayoutPanel1.Name = "TableLayoutPanel1"
-        TableLayoutPanel1.RowCount = 3
-        TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
-        TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
-        TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
-        TableLayoutPanel1.Size = New Size(798, 123)
+        TableLayoutPanel1.RowCount = 5
+        TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 20.0F))
+        TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 20.0F))
+        TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 20.0F))
+        TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 20.0F))
+        TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 20.0F))
+        TableLayoutPanel1.Size = New Size(798, 186)
         TableLayoutPanel1.TabIndex = 0
-        ' 
-        ' BSuspender
-        ' 
-        BSuspender.Anchor = AnchorStyles.None
-        BSuspender.Location = New Point(630, 86)
-        BSuspender.Name = "BSuspender"
-        BSuspender.Size = New Size(94, 33)
-        BSuspender.TabIndex = 2
-        BSuspender.Text = "Suspender"
-        BSuspender.UseVisualStyleBackColor = True
-        ' 
-        ' TBUsuario
-        ' 
-        TBUsuario.Location = New Point(162, 44)
-        TBUsuario.Name = "TBUsuario"
-        TBUsuario.Size = New Size(178, 27)
-        TBUsuario.TabIndex = 5
-        ' 
-        ' BEditar
-        ' 
-        BEditar.Anchor = AnchorStyles.None
-        BEditar.Location = New Point(630, 44)
-        BEditar.Name = "BEditar"
-        BEditar.Size = New Size(94, 35)
-        BEditar.TabIndex = 1
-        BEditar.Text = "Editar"
-        BEditar.UseVisualStyleBackColor = True
         ' 
         ' LNombre
         ' 
         LNombre.Anchor = AnchorStyles.Right
         LNombre.AutoSize = True
-        LNombre.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
-        LNombre.Location = New Point(85, 10)
+        LNombre.Font = New Font("Segoe UI", 9.0F, FontStyle.Bold)
+        LNombre.Location = New Point(85, 8)
         LNombre.Name = "LNombre"
         LNombre.Size = New Size(71, 20)
         LNombre.TabIndex = 0
         LNombre.Text = "Nombre:"
-        ' 
-        ' BAgregar
-        ' 
-        BAgregar.Anchor = AnchorStyles.None
-        BAgregar.Location = New Point(630, 3)
-        BAgregar.Name = "BAgregar"
-        BAgregar.Size = New Size(94, 35)
-        BAgregar.TabIndex = 0
-        BAgregar.Text = "Agregar"
-        BAgregar.UseVisualStyleBackColor = True
-        ' 
-        ' LUsuario
-        ' 
-        LUsuario.Anchor = AnchorStyles.Right
-        LUsuario.AutoSize = True
-        LUsuario.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
-        LUsuario.Location = New Point(89, 51)
-        LUsuario.Name = "LUsuario"
-        LUsuario.Size = New Size(67, 20)
-        LUsuario.TabIndex = 2
-        LUsuario.Text = "Usuario:"
         ' 
         ' TBNombre
         ' 
@@ -153,12 +109,32 @@ Partial Class FormUsuarios
         TBNombre.Size = New Size(178, 27)
         TBNombre.TabIndex = 3
         ' 
+        ' LRol
+        ' 
+        LRol.Anchor = AnchorStyles.Right
+        LRol.AutoSize = True
+        LRol.Font = New Font("Segoe UI", 9.0F, FontStyle.Bold)
+        LRol.Location = New Point(120, 157)
+        LRol.Name = "LRol"
+        LRol.Size = New Size(36, 20)
+        LRol.TabIndex = 7
+        LRol.Text = "Rol:"
+        ' 
+        ' CBRol
+        ' 
+        CBRol.Anchor = AnchorStyles.Left
+        CBRol.FormattingEnabled = True
+        CBRol.Location = New Point(162, 153)
+        CBRol.Name = "CBRol"
+        CBRol.Size = New Size(151, 28)
+        CBRol.TabIndex = 8
+        ' 
         ' LContrasena
         ' 
         LContrasena.Anchor = AnchorStyles.Right
         LContrasena.AutoSize = True
-        LContrasena.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
-        LContrasena.Location = New Point(64, 92)
+        LContrasena.Font = New Font("Segoe UI", 9.0F, FontStyle.Bold)
+        LContrasena.Location = New Point(64, 119)
         LContrasena.Name = "LContrasena"
         LContrasena.Size = New Size(92, 20)
         LContrasena.TabIndex = 1
@@ -166,40 +142,85 @@ Partial Class FormUsuarios
         ' 
         ' TBContrasena
         ' 
-        TBContrasena.Location = New Point(162, 85)
+        TBContrasena.Location = New Point(162, 114)
         TBContrasena.Name = "TBContrasena"
         TBContrasena.PasswordChar = "*"c
         TBContrasena.Size = New Size(178, 27)
         TBContrasena.TabIndex = 6
         ' 
-        ' CBRol
+        ' LUsuario
         ' 
-        CBRol.Anchor = AnchorStyles.Left
-        CBRol.FormattingEnabled = True
-        CBRol.Location = New Point(403, 16)
-        CBRol.Name = "CBRol"
-        CBRol.Size = New Size(151, 28)
-        CBRol.TabIndex = 8
+        LUsuario.Anchor = AnchorStyles.Right
+        LUsuario.AutoSize = True
+        LUsuario.Font = New Font("Segoe UI", 9.0F, FontStyle.Bold)
+        LUsuario.Location = New Point(89, 82)
+        LUsuario.Name = "LUsuario"
+        LUsuario.Size = New Size(67, 20)
+        LUsuario.TabIndex = 2
+        LUsuario.Text = "Usuario:"
         ' 
-        ' LRol
+        ' TBUsuario
         ' 
-        LRol.Anchor = AnchorStyles.Right
-        LRol.AutoSize = True
-        LRol.Font = New Font("Segoe UI", 9F, FontStyle.Bold)
-        LRol.Location = New Point(361, 20)
-        LRol.Name = "LRol"
-        LRol.Size = New Size(36, 20)
-        LRol.TabIndex = 7
-        LRol.Text = "Rol:"
+        TBUsuario.Location = New Point(162, 77)
+        TBUsuario.Name = "TBUsuario"
+        TBUsuario.Size = New Size(178, 27)
+        TBUsuario.TabIndex = 5
+        ' 
+        ' LApellido
+        ' 
+        LApellido.Anchor = AnchorStyles.Right
+        LApellido.AutoSize = True
+        LApellido.Font = New Font("Segoe UI", 9.0F, FontStyle.Bold)
+        LApellido.Location = New Point(85, 45)
+        LApellido.Name = "LApellido"
+        LApellido.Size = New Size(71, 20)
+        LApellido.TabIndex = 9
+        LApellido.Text = "Apellido:"
+        ' 
+        ' TBApellido
+        ' 
+        TBApellido.Location = New Point(162, 40)
+        TBApellido.Name = "TBApellido"
+        TBApellido.Size = New Size(178, 27)
+        TBApellido.TabIndex = 10
+        ' 
+        ' BSuspender
+        ' 
+        BSuspender.Anchor = AnchorStyles.None
+        BSuspender.Location = New Point(630, 114)
+        BSuspender.Name = "BSuspender"
+        BSuspender.Size = New Size(94, 31)
+        BSuspender.TabIndex = 2
+        BSuspender.Text = "Suspender"
+        BSuspender.UseVisualStyleBackColor = True
+        ' 
+        ' BEditar
+        ' 
+        BEditar.Anchor = AnchorStyles.None
+        BEditar.Location = New Point(630, 77)
+        BEditar.Name = "BEditar"
+        BEditar.Size = New Size(94, 31)
+        BEditar.TabIndex = 1
+        BEditar.Text = "Editar"
+        BEditar.UseVisualStyleBackColor = True
+        ' 
+        ' BAgregar
+        ' 
+        BAgregar.Anchor = AnchorStyles.None
+        BAgregar.Location = New Point(630, 40)
+        BAgregar.Name = "BAgregar"
+        BAgregar.Size = New Size(94, 31)
+        BAgregar.TabIndex = 0
+        BAgregar.Text = "Agregar"
+        BAgregar.UseVisualStyleBackColor = True
         ' 
         ' Panel2
         ' 
         Panel2.Controls.Add(Panel3)
-        Panel2.Controls.Add(Panel4)
         Panel2.Dock = DockStyle.Fill
-        Panel2.Location = New Point(0, 125)
+        Panel2.Location = New Point(0, 188)
         Panel2.Name = "Panel2"
-        Panel2.Size = New Size(800, 325)
+        Panel2.Size = New Size(800, 262)
         Panel2.TabIndex = 2
         ' 
         ' Panel3
@@ -207,9 +228,9 @@ Partial Class FormUsuarios
         Panel3.BackColor = SystemColors.ControlDark
         Panel3.Controls.Add(DGVUsuarios)
         Panel3.Dock = DockStyle.Fill
-        Panel3.Location = New Point(0, 61)
+        Panel3.Location = New Point(0, 0)
         Panel3.Name = "Panel3"
-        Panel3.Size = New Size(800, 264)
+        Panel3.Size = New Size(800, 262)
         Panel3.TabIndex = 0
         ' 
         ' DGVUsuarios
@@ -219,38 +240,12 @@ Partial Class FormUsuarios
         DGVUsuarios.Location = New Point(0, 0)
         DGVUsuarios.Name = "DGVUsuarios"
         DGVUsuarios.RowHeadersWidth = 51
-        DGVUsuarios.Size = New Size(800, 264)
+        DGVUsuarios.Size = New Size(800, 262)
         DGVUsuarios.TabIndex = 1
-        ' 
-        ' Panel4
-        ' 
-        Panel4.BackColor = Color.LightGray
-        Panel4.Controls.Add(TableLayoutPanel2)
-        Panel4.Dock = DockStyle.Top
-        Panel4.Location = New Point(0, 0)
-        Panel4.Name = "Panel4"
-        Panel4.Size = New Size(800, 61)
-        Panel4.TabIndex = 3
-        ' 
-        ' TableLayoutPanel2
-        ' 
-        TableLayoutPanel2.ColumnCount = 2
-        TableLayoutPanel2.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50F))
-        TableLayoutPanel2.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50F))
-        TableLayoutPanel2.Controls.Add(LRol, 0, 0)
-        TableLayoutPanel2.Controls.Add(CBRol, 1, 0)
-        TableLayoutPanel2.Dock = DockStyle.Fill
-        TableLayoutPanel2.Location = New Point(0, 0)
-        TableLayoutPanel2.Name = "TableLayoutPanel2"
-        TableLayoutPanel2.RowCount = 1
-        TableLayoutPanel2.RowStyles.Add(New RowStyle(SizeType.Percent, 50F))
-        TableLayoutPanel2.RowStyles.Add(New RowStyle(SizeType.Percent, 50F))
-        TableLayoutPanel2.Size = New Size(800, 61)
-        TableLayoutPanel2.TabIndex = 2
         ' 
         ' FormUsuarios
         ' 
-        AutoScaleDimensions = New SizeF(8F, 20F)
+        AutoScaleDimensions = New SizeF(8.0F, 20.0F)
         AutoScaleMode = AutoScaleMode.Font
         BackColor = Color.LightGray
         ClientSize = New Size(800, 450)
@@ -264,9 +259,6 @@ Partial Class FormUsuarios
         Panel2.ResumeLayout(False)
         Panel3.ResumeLayout(False)
         CType(DGVUsuarios, ComponentModel.ISupportInitialize).EndInit()
-        Panel4.ResumeLayout(False)
-        TableLayoutPanel2.ResumeLayout(False)
-        TableLayoutPanel2.PerformLayout()
         ResumeLayout(False)
     End Sub
     Friend WithEvents Panel1 As Panel
@@ -285,6 +277,6 @@ Partial Class FormUsuarios
     Friend WithEvents BEditar As Button
     Friend WithEvents BAgregar As Button
     Friend WithEvents DGVUsuarios As DataGridView
-    Friend WithEvents Panel4 As Panel
-    Friend WithEvents TableLayoutPanel2 As TableLayoutPanel
+    Friend WithEvents LApellido As Label
+    Friend WithEvents TBApellido As TextBox
 End Class
