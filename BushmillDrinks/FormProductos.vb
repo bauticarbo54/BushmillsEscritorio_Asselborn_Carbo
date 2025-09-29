@@ -1,9 +1,10 @@
 ﻿Public Class FormProductos
 
     Private productos As DataTable
+    Private codigoBarraOriginal As String = "" ' Variable para guardar el código original al editar
 
     Private Sub FormProductos_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Me.Text = "Gestión de Productos"
+        Me.Text = "Gestión de Productos y Stock"
         Me.WindowState = FormWindowState.Normal
 
         ' Configurar validación de campos
@@ -15,11 +16,8 @@
             DGVProductos.DataSource = productos
         End If
 
-        ' Formato del precio como moneda
-        If DGVProductos.Columns.Contains("Precio") Then
-            DGVProductos.Columns("Precio").DefaultCellStyle.Format = "C2"
-            DGVProductos.Columns("Precio").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
-        End If
+        ' Formato de columnas
+        FormatearDataGridView()
 
         ' Datos de prueba para combos
         If CBCategoria.Items.Count = 0 Then
@@ -40,11 +38,17 @@
         TBGraduacion.MaxLength = 10
         TBProveedor.MaxLength = 100
 
-        ' Configurar NUD
+        ' Configurar NUDs
         NUDPrecio.DecimalPlaces = 2
         NUDPrecio.Minimum = 0
         NUDPrecio.Maximum = 100000
         NUDPrecio.Increment = 0.5D
+
+        NUDStock.DecimalPlaces = 0
+        NUDStock.Minimum = 0
+        NUDStock.Maximum = 10000
+        NUDStock.Increment = 1
+        NUDStock.Value = 0
     End Sub
 
     Private Sub ConfigurarControles()
@@ -54,6 +58,7 @@
         toolTip.SetToolTip(TBVolumen, "Volumen en centímetros cúbicos (solo números, ej: 750, 1000)")
         toolTip.SetToolTip(TBGraduacion, "Ejemplo: 12.5%, 40% vol")
         toolTip.SetToolTip(TBProveedor, "Nombre del proveedor (máx. 100 caracteres)")
+        toolTip.SetToolTip(NUDStock, "Cantidad en stock (0-10000 unidades)")
     End Sub
 
     Private Sub PrepararTabla()
@@ -65,7 +70,29 @@
         productos.Columns.Add("Volumen", GetType(String))
         productos.Columns.Add("Graduacion", GetType(String))
         productos.Columns.Add("Proveedor", GetType(String))
+        productos.Columns.Add("Stock", GetType(Integer))
         productos.Columns.Add("Estado", GetType(String))
+    End Sub
+
+    Private Sub FormatearDataGridView()
+        ' Formato del precio como moneda
+        If DGVProductos.Columns.Contains("Precio") Then
+            DGVProductos.Columns("Precio").DefaultCellStyle.Format = "C2"
+            DGVProductos.Columns("Precio").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+        End If
+
+        ' Formato del stock como número entero
+        If DGVProductos.Columns.Contains("Stock") Then
+            DGVProductos.Columns("Stock").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+            DGVProductos.Columns("Stock").DefaultCellStyle.Format = "N0"
+        End If
+
+        ' Autoajustar columnas
+        DGVProductos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+        DGVProductos.SelectionMode = DataGridViewSelectionMode.FullRowSelect
+        DGVProductos.ReadOnly = True
+        DGVProductos.AllowUserToAddRows = False
+        DGVProductos.RowHeadersVisible = False
     End Sub
 
     ' --- VALIDACIONES INDIVIDUALES ---
@@ -90,16 +117,6 @@
         ' Validar que sea solo numérico
         If Not System.Text.RegularExpressions.Regex.IsMatch(codigo, "^\d+$") Then
             MessageBox.Show("El código de barras solo puede contener números.", "Validación",
-                          MessageBoxButtons.OK, MessageBoxIcon.Warning)
-            TBCodBarra.Focus()
-            TBCodBarra.SelectAll()
-            Return False
-        End If
-
-        ' Verificar si ya existe
-        Dim encontrado = productos.Select($"CodigoBarra = '{codigo.Replace("'", "''")}'")
-        If encontrado.Length > 0 Then
-            MessageBox.Show("Este código de barras ya está registrado.", "Validación",
                           MessageBoxButtons.OK, MessageBoxIcon.Warning)
             TBCodBarra.Focus()
             TBCodBarra.SelectAll()
@@ -250,34 +267,80 @@
         Return True
     End Function
 
-    ' --- VALIDACIÓN COMPLETA ---
-    Private Function ValidarCamposCompletos() As Boolean
-        Return ValidarCodigoBarra() AndAlso
-               ValidarCategoria() AndAlso
+    Private Function ValidarStock() As Boolean
+        If NUDStock.Value < 0 Then
+            MessageBox.Show("El stock no puede ser negativo.", "Validación",
+                          MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            NUDStock.Focus()
+            Return False
+        End If
+
+        If NUDStock.Value > 10000 Then
+            MessageBox.Show("El stock no puede ser mayor a 10,000 unidades.", "Validación",
+                          MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            NUDStock.Focus()
+            Return False
+        End If
+
+        Return True
+    End Function
+
+    ' --- VALIDACIÓN COMPLETA PARA AGREGAR ---
+    Private Function ValidarCamposParaAgregar() As Boolean
+        If Not ValidarCodigoBarra() Then Return False
+
+        ' Verificar si ya existe (solo para agregar)
+        Dim codigo As String = TBCodBarra.Text.Trim()
+        Dim encontrado = productos.Select($"CodigoBarra = '{codigo.Replace("'", "''")}'")
+        If encontrado.Length > 0 Then
+            MessageBox.Show("Este código de barras ya está registrado.", "Validación",
+                          MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            TBCodBarra.Focus()
+            TBCodBarra.SelectAll()
+            Return False
+        End If
+
+        Return ValidarCategoria() AndAlso
                ValidarMarca() AndAlso
                ValidarPrecio() AndAlso
                ValidarVolumen() AndAlso
                ValidarGraduacion() AndAlso
-               ValidarProveedor()
+               ValidarProveedor() AndAlso
+               ValidarStock()
     End Function
 
-    ' --- ESCANEO O INGRESO MANUAL DEL CÓDIGO ---
-    Private Sub TBCodBarra_KeyDown(sender As Object, e As KeyEventArgs) Handles TBCodBarra.KeyDown
-        If e.KeyCode = Keys.Enter Then
-            e.SuppressKeyPress = True
-            If ValidarCodigoBarra() Then
-                CBCategoria.Focus()
+    ' --- VALIDACIÓN COMPLETA PARA EDITAR ---
+    Private Function ValidarCamposParaEditar() As Boolean
+        If Not ValidarCodigoBarra() Then Return False
+
+        ' Validación especial para código de barras en edición
+        Dim codigo As String = TBCodBarra.Text.Trim()
+        If codigo <> codigoBarraOriginal Then
+            ' Si cambió el código, verificar que no exista otro
+            Dim encontrado = productos.Select($"CodigoBarra = '{codigo.Replace("'", "''")}' AND CodigoBarra <> '{codigoBarraOriginal.Replace("'", "''")}'")
+            If encontrado.Length > 0 Then
+                MessageBox.Show("Este código de barras ya está registrado en otro producto.", "Validación",
+                              MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                TBCodBarra.Focus()
+                TBCodBarra.SelectAll()
+                Return False
             End If
         End If
-    End Sub
+
+        Return ValidarCategoria() AndAlso
+               ValidarMarca() AndAlso
+               ValidarPrecio() AndAlso
+               ValidarVolumen() AndAlso
+               ValidarGraduacion() AndAlso
+               ValidarProveedor() AndAlso
+               ValidarStock()
+    End Function
 
     ' --- VALIDACIÓN EN TIEMPO REAL ---
     Private Sub TBCodBarra_TextChanged(sender As Object, e As EventArgs) Handles TBCodBarra.TextChanged
         ' Limitar a caracteres numéricos
         Dim texto As String = TBCodBarra.Text
         If texto.Length > 0 AndAlso Not System.Text.RegularExpressions.Regex.IsMatch(texto, "^\d*$") Then
-            MessageBox.Show("El código de barras solo puede contener números.", "Validación",
-                          MessageBoxButtons.OK, MessageBoxIcon.Warning)
             ' Mantener solo los caracteres numéricos
             Dim soloNumeros As String = System.Text.RegularExpressions.Regex.Replace(texto, "[^\d]", "")
             TBCodBarra.Text = soloNumeros
@@ -289,8 +352,6 @@
         ' Limitar a caracteres numéricos
         Dim texto As String = TBVolumen.Text
         If texto.Length > 0 AndAlso Not System.Text.RegularExpressions.Regex.IsMatch(texto, "^\d*$") Then
-            MessageBox.Show("El volumen solo puede contener números.", "Validación",
-                          MessageBoxButtons.OK, MessageBoxIcon.Warning)
             ' Mantener solo los caracteres numéricos
             Dim soloNumeros As String = System.Text.RegularExpressions.Regex.Replace(texto, "[^\d]", "")
             TBVolumen.Text = soloNumeros
@@ -307,9 +368,19 @@
         End If
     End Sub
 
+    ' --- ESCANEO O INGRESO MANUAL DEL CÓDIGO ---
+    Private Sub TBCodBarra_KeyDown(sender As Object, e As KeyEventArgs) Handles TBCodBarra.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            e.SuppressKeyPress = True
+            If ValidarCodigoBarra() Then
+                CBCategoria.Focus()
+            End If
+        End If
+    End Sub
+
     ' --- BOTÓN AGREGAR ---
     Private Sub BAgregar_Click(sender As Object, e As EventArgs) Handles BAgregar.Click
-        If Not ValidarCamposCompletos() Then
+        If Not ValidarCamposParaAgregar() Then
             Exit Sub
         End If
 
@@ -319,9 +390,10 @@
                 CBCategoria.Text,
                 CBMarca.Text,
                 NUDPrecio.Value,
-                TBVolumen.Text.Trim() + " cm³", ' Agregar unidad automáticamente
+                TBVolumen.Text.Trim() + " cm³",
                 TBGraduacion.Text.Trim(),
                 TBProveedor.Text.Trim(),
+                CInt(NUDStock.Value),
                 "Activo"
             )
 
@@ -344,25 +416,21 @@
             Exit Sub
         End If
 
-        ' Validar campos excepto código de barras (no se modifica)
-        If Not (ValidarCategoria() AndAlso
-                ValidarMarca() AndAlso
-                ValidarPrecio() AndAlso
-                ValidarVolumen() AndAlso
-                ValidarGraduacion() AndAlso
-                ValidarProveedor()) Then
+        If Not ValidarCamposParaEditar() Then
             Exit Sub
         End If
 
         Try
             Dim row As DataGridViewRow = DGVProductos.SelectedRows(0)
 
+            row.Cells("CodigoBarra").Value = TBCodBarra.Text.Trim()
             row.Cells("Categoria").Value = CBCategoria.Text
             row.Cells("Marca").Value = CBMarca.Text
             row.Cells("Precio").Value = NUDPrecio.Value
-            row.Cells("Volumen").Value = TBVolumen.Text.Trim() + " cm³" ' Agregar unidad
+            row.Cells("Volumen").Value = TBVolumen.Text.Trim() + " cm³"
             row.Cells("Graduacion").Value = TBGraduacion.Text.Trim()
             row.Cells("Proveedor").Value = TBProveedor.Text.Trim()
+            row.Cells("Stock").Value = CInt(NUDStock.Value)
 
             MessageBox.Show("Producto actualizado correctamente.", "Éxito",
                           MessageBoxButtons.OK, MessageBoxIcon.Information)
@@ -410,7 +478,11 @@
         If e.RowIndex >= 0 Then
             Try
                 Dim row As DataGridViewRow = DGVProductos.Rows(e.RowIndex)
-                TBCodBarra.Text = row.Cells("CodigoBarra").Value.ToString()
+
+                ' Guardar el código original para edición
+                codigoBarraOriginal = row.Cells("CodigoBarra").Value.ToString()
+
+                TBCodBarra.Text = codigoBarraOriginal
                 CBCategoria.Text = row.Cells("Categoria").Value.ToString()
                 CBMarca.Text = row.Cells("Marca").Value.ToString()
                 NUDPrecio.Value = Convert.ToDecimal(row.Cells("Precio").Value)
@@ -425,6 +497,7 @@
 
                 TBGraduacion.Text = row.Cells("Graduacion").Value.ToString()
                 TBProveedor.Text = row.Cells("Proveedor").Value.ToString()
+                NUDStock.Value = Convert.ToDecimal(row.Cells("Stock").Value)
 
                 ' Actualizar texto del botón según estado
                 Dim estadoActual As String = row.Cells("Estado").Value.ToString()
@@ -437,15 +510,34 @@
         End If
     End Sub
 
-    ' --- FORMATEAR FILAS SEGÚN ESTADO ---
+    ' --- FORMATEAR FILAS SEGÚN ESTADO Y STOCK ---
     Private Sub DGVProductos_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DGVProductos.CellFormatting
-        If DGVProductos.Columns(e.ColumnIndex).Name = "Estado" AndAlso e.Value IsNot Nothing Then
-            If e.Value.ToString() = "Inactivo" Then
-                DGVProductos.Rows(e.RowIndex).DefaultCellStyle.ForeColor = Color.Gray
-                DGVProductos.Rows(e.RowIndex).DefaultCellStyle.BackColor = Color.LightYellow
-            Else
-                DGVProductos.Rows(e.RowIndex).DefaultCellStyle.ForeColor = Color.Black
-                DGVProductos.Rows(e.RowIndex).DefaultCellStyle.BackColor = Color.White
+        If e.RowIndex >= 0 AndAlso e.Value IsNot Nothing Then
+            Dim row As DataGridViewRow = DGVProductos.Rows(e.RowIndex)
+
+            ' Formato por estado
+            If DGVProductos.Columns(e.ColumnIndex).Name = "Estado" Then
+                If e.Value.ToString() = "Inactivo" Then
+                    row.DefaultCellStyle.ForeColor = Color.Gray
+                    row.DefaultCellStyle.BackColor = Color.LightYellow
+                Else
+                    row.DefaultCellStyle.ForeColor = Color.Black
+                    row.DefaultCellStyle.BackColor = Color.White
+                End If
+            End If
+
+            ' Formato por stock bajo
+            If DGVProductos.Columns(e.ColumnIndex).Name = "Stock" Then
+                Dim stock As Integer
+                If Integer.TryParse(e.Value.ToString(), stock) Then
+                    If stock = 0 Then
+                        e.CellStyle.BackColor = Color.LightCoral
+                        e.CellStyle.ForeColor = Color.DarkRed
+                    ElseIf stock < 10 Then
+                        e.CellStyle.BackColor = Color.LightYellow
+                        e.CellStyle.ForeColor = Color.OrangeRed
+                    End If
+                End If
             End If
         End If
     End Sub
@@ -459,6 +551,8 @@
         TBVolumen.Clear()
         TBGraduacion.Clear()
         TBProveedor.Clear()
+        NUDStock.Value = 0
+        codigoBarraOriginal = "" ' Limpiar también el código original
         TBCodBarra.Focus()
     End Sub
 

@@ -44,6 +44,8 @@ Partial Class FormProductos
         TBGraduacion = New TextBox()
         TBProveedor = New TextBox()
         LProveedor = New Label()
+        LStock = New Label()
+        NUDStock = New NumericUpDown()
         Panel2.SuspendLayout()
         Panel1.SuspendLayout()
         Panel4.SuspendLayout()
@@ -52,6 +54,7 @@ Partial Class FormProductos
         Panel3.SuspendLayout()
         TableLayoutPanel2.SuspendLayout()
         CType(NUDPrecio, ComponentModel.ISupportInitialize).BeginInit()
+        CType(NUDStock, ComponentModel.ISupportInitialize).BeginInit()
         SuspendLayout()
         ' 
         ' Panel2
@@ -69,20 +72,20 @@ Partial Class FormProductos
         ' 
         Panel1.AutoSize = True
         Panel1.Controls.Add(Panel4)
-        Panel1.Controls.Add(TableLayoutPanel1)
         Panel1.Dock = DockStyle.Fill
-        Panel1.Location = New Point(0, 125)
+        Panel1.Location = New Point(0, 153)
         Panel1.Name = "Panel1"
-        Panel1.Size = New Size(800, 325)
+        Panel1.Size = New Size(800, 297)
         Panel1.TabIndex = 3
         ' 
         ' Panel4
         ' 
         Panel4.Controls.Add(DGVProductos)
+        Panel4.Controls.Add(TableLayoutPanel1)
         Panel4.Dock = DockStyle.Fill
-        Panel4.Location = New Point(0, 64)
+        Panel4.Location = New Point(0, 0)
         Panel4.Name = "Panel4"
-        Panel4.Size = New Size(800, 261)
+        Panel4.Size = New Size(800, 297)
         Panel4.TabIndex = 4
         ' 
         ' DGVProductos
@@ -90,10 +93,10 @@ Partial Class FormProductos
         DGVProductos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
         DGVProductos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
         DGVProductos.Dock = DockStyle.Fill
-        DGVProductos.Location = New Point(0, 0)
+        DGVProductos.Location = New Point(0, 64)
         DGVProductos.Name = "DGVProductos"
         DGVProductos.RowHeadersWidth = 51
-        DGVProductos.Size = New Size(800, 261)
+        DGVProductos.Size = New Size(800, 233)
         DGVProductos.TabIndex = 2
         ' 
         ' TableLayoutPanel1
@@ -149,7 +152,7 @@ Partial Class FormProductos
         Panel3.Dock = DockStyle.Top
         Panel3.Location = New Point(0, 0)
         Panel3.Name = "Panel3"
-        Panel3.Size = New Size(800, 125)
+        Panel3.Size = New Size(800, 153)
         Panel3.TabIndex = 0
         ' 
         ' TableLayoutPanel2
@@ -171,21 +174,24 @@ Partial Class FormProductos
         TableLayoutPanel2.Controls.Add(TBGraduacion, 3, 1)
         TableLayoutPanel2.Controls.Add(TBProveedor, 3, 2)
         TableLayoutPanel2.Controls.Add(LProveedor, 2, 2)
+        TableLayoutPanel2.Controls.Add(LStock, 0, 3)
+        TableLayoutPanel2.Controls.Add(NUDStock, 1, 3)
         TableLayoutPanel2.Dock = DockStyle.Top
         TableLayoutPanel2.Location = New Point(0, 0)
         TableLayoutPanel2.Name = "TableLayoutPanel2"
-        TableLayoutPanel2.RowCount = 3
+        TableLayoutPanel2.RowCount = 4
         TableLayoutPanel2.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
         TableLayoutPanel2.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
         TableLayoutPanel2.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
-        TableLayoutPanel2.Size = New Size(800, 125)
+        TableLayoutPanel2.RowStyles.Add(New RowStyle(SizeType.Percent, 25F))
+        TableLayoutPanel2.Size = New Size(800, 153)
         TableLayoutPanel2.TabIndex = 0
         ' 
         ' LCodigoBarra
         ' 
         LCodigoBarra.Anchor = AnchorStyles.Right
         LCodigoBarra.AutoSize = True
-        LCodigoBarra.Location = New Point(30, 10)
+        LCodigoBarra.Location = New Point(30, 9)
         LCodigoBarra.Name = "LCodigoBarra"
         LCodigoBarra.Size = New Size(127, 20)
         LCodigoBarra.TabIndex = 0
@@ -194,7 +200,7 @@ Partial Class FormProductos
         ' TBCodBarra
         ' 
         TBCodBarra.Anchor = AnchorStyles.Left
-        TBCodBarra.Location = New Point(163, 7)
+        TBCodBarra.Location = New Point(163, 5)
         TBCodBarra.Name = "TBCodBarra"
         TBCodBarra.Size = New Size(150, 27)
         TBCodBarra.TabIndex = 1
@@ -203,7 +209,7 @@ Partial Class FormProductos
         ' 
         CBCategoria.Anchor = AnchorStyles.Left
         CBCategoria.FormattingEnabled = True
-        CBCategoria.Location = New Point(163, 47)
+        CBCategoria.Location = New Point(163, 43)
         CBCategoria.Name = "CBCategoria"
         CBCategoria.Size = New Size(151, 28)
         CBCategoria.TabIndex = 2
@@ -213,7 +219,7 @@ Partial Class FormProductos
         ' 
         CBMarca.Anchor = AnchorStyles.Right
         CBMarca.FormattingEnabled = True
-        CBMarca.Location = New Point(6, 47)
+        CBMarca.Location = New Point(6, 43)
         CBMarca.Name = "CBMarca"
         CBMarca.Size = New Size(151, 28)
         CBMarca.TabIndex = 3
@@ -223,7 +229,7 @@ Partial Class FormProductos
         ' 
         LPrecio.Anchor = AnchorStyles.Right
         LPrecio.AutoSize = True
-        LPrecio.Location = New Point(104, 93)
+        LPrecio.Location = New Point(104, 85)
         LPrecio.Name = "LPrecio"
         LPrecio.Size = New Size(53, 20)
         LPrecio.TabIndex = 4
@@ -233,7 +239,7 @@ Partial Class FormProductos
         ' 
         NUDPrecio.Anchor = AnchorStyles.Left
         NUDPrecio.DecimalPlaces = 2
-        NUDPrecio.Location = New Point(163, 90)
+        NUDPrecio.Location = New Point(163, 81)
         NUDPrecio.Maximum = New Decimal(New Integer() {100000000, 0, 0, 0})
         NUDPrecio.Name = "NUDPrecio"
         NUDPrecio.Size = New Size(150, 27)
@@ -243,7 +249,7 @@ Partial Class FormProductos
         ' 
         LVolumen.Anchor = AnchorStyles.Right
         LVolumen.AutoSize = True
-        LVolumen.Location = New Point(487, 10)
+        LVolumen.Location = New Point(487, 9)
         LVolumen.Name = "LVolumen"
         LVolumen.Size = New Size(70, 20)
         LVolumen.TabIndex = 6
@@ -252,7 +258,7 @@ Partial Class FormProductos
         ' TBVolumen
         ' 
         TBVolumen.Anchor = AnchorStyles.Left
-        TBVolumen.Location = New Point(563, 7)
+        TBVolumen.Location = New Point(563, 5)
         TBVolumen.Name = "TBVolumen"
         TBVolumen.Size = New Size(125, 27)
         TBVolumen.TabIndex = 7
@@ -261,7 +267,7 @@ Partial Class FormProductos
         ' 
         LGraduacion.Anchor = AnchorStyles.Right
         LGraduacion.AutoSize = True
-        LGraduacion.Location = New Point(477, 51)
+        LGraduacion.Location = New Point(477, 47)
         LGraduacion.Name = "LGraduacion"
         LGraduacion.Size = New Size(80, 20)
         LGraduacion.TabIndex = 8
@@ -270,7 +276,7 @@ Partial Class FormProductos
         ' TBGraduacion
         ' 
         TBGraduacion.Anchor = AnchorStyles.Left
-        TBGraduacion.Location = New Point(563, 48)
+        TBGraduacion.Location = New Point(563, 43)
         TBGraduacion.Name = "TBGraduacion"
         TBGraduacion.Size = New Size(125, 27)
         TBGraduacion.TabIndex = 9
@@ -278,7 +284,7 @@ Partial Class FormProductos
         ' TBProveedor
         ' 
         TBProveedor.Anchor = AnchorStyles.Left
-        TBProveedor.Location = New Point(563, 90)
+        TBProveedor.Location = New Point(563, 81)
         TBProveedor.Name = "TBProveedor"
         TBProveedor.Size = New Size(125, 27)
         TBProveedor.TabIndex = 11
@@ -287,11 +293,31 @@ Partial Class FormProductos
         ' 
         LProveedor.Anchor = AnchorStyles.Right
         LProveedor.AutoSize = True
-        LProveedor.Location = New Point(477, 93)
+        LProveedor.Location = New Point(477, 85)
         LProveedor.Name = "LProveedor"
         LProveedor.Size = New Size(80, 20)
         LProveedor.TabIndex = 10
         LProveedor.Text = "Proveedor:"
+        ' 
+        ' LStock
+        ' 
+        LStock.Anchor = AnchorStyles.Right
+        LStock.AutoSize = True
+        LStock.Location = New Point(109, 123)
+        LStock.Name = "LStock"
+        LStock.Size = New Size(48, 20)
+        LStock.TabIndex = 12
+        LStock.Text = "Stock:"
+        LStock.TextAlign = ContentAlignment.MiddleCenter
+        ' 
+        ' NUDStock
+        ' 
+        NUDStock.Anchor = AnchorStyles.Left
+        NUDStock.Location = New Point(163, 120)
+        NUDStock.Maximum = New Decimal(New Integer() {10000, 0, 0, 0})
+        NUDStock.Name = "NUDStock"
+        NUDStock.Size = New Size(150, 27)
+        NUDStock.TabIndex = 13
         ' 
         ' FormProductos
         ' 
@@ -311,6 +337,7 @@ Partial Class FormProductos
         TableLayoutPanel2.ResumeLayout(False)
         TableLayoutPanel2.PerformLayout()
         CType(NUDPrecio, ComponentModel.ISupportInitialize).EndInit()
+        CType(NUDStock, ComponentModel.ISupportInitialize).EndInit()
         ResumeLayout(False)
     End Sub
     Friend WithEvents Panel2 As Panel
@@ -335,4 +362,6 @@ Partial Class FormProductos
     Friend WithEvents Panel1 As Panel
     Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
     Friend WithEvents Panel4 As Panel
+    Friend WithEvents LStock As Label
+    Friend WithEvents NUDStock As NumericUpDown
 End Class
