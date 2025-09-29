@@ -118,8 +118,54 @@ Public Class FormMenu
         AbrirFormularioEnPanel(New FormReportes())
     End Sub
 
+    ' ========= BOTÓN SALIR ACTUALIZADO =========
     Private Sub BSalir_Click(sender As Object, e As EventArgs) Handles BSalir.Click
-        Application.Exit()
+        ' Preguntar confirmación antes de salir
+        Dim resultado As DialogResult = MessageBox.Show(
+            "¿Está seguro que desea cerrar sesión?",
+            "Confirmar cierre de sesión",
+            MessageBoxButtons.YesNo,
+            MessageBoxIcon.Question)
+
+        If resultado = DialogResult.Yes Then
+            CerrarSesion()
+        End If
     End Sub
 
+    Private Sub CerrarSesion()
+        ' Limpiar datos de sesión
+        SessionUser.Usuario = Nothing
+        SessionUser.Nombre = Nothing
+        SessionUser.Rol = Nothing
+        SessionUser.Estado = Nothing
+
+        ' Cerrar este formulario
+        Me.Hide()
+
+        ' Mostrar formulario de login
+        Dim formLogin As New FormLogin()
+        formLogin.Show()
+
+        ' Opcional: limpiar el panel si hay algún formulario abierto
+        PanelGeneral.Controls.Clear()
+    End Sub
+
+    ' Opcional: Manejar el cierre del formulario con la X
+    Private Sub FormMenu_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+        ' Si el usuario cierra con la X, preguntar si quiere cerrar sesión
+        If e.CloseReason = CloseReason.UserClosing Then
+            Dim resultado As DialogResult = MessageBox.Show(
+                "¿Desea cerrar sesión y salir de la aplicación?",
+                "Confirmar salida",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question)
+
+            If resultado = DialogResult.Yes Then
+                CerrarSesion()
+                Application.Exit() ' Cerrar completamente la aplicación
+            Else
+                e.Cancel = True ' Cancelar el cierre
+            End If
+        End If
+    End Sub
 End Class
