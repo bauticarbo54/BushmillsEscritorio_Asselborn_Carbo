@@ -1,19 +1,14 @@
-# Visual Studio
-.vs/
+## Ignore build outputs
+[Bb]in/
+[Oo]bj/
+
+## Ignore NuGet packages
+*.nupkg
+
+## Ignore user-specific files
 *.user
 *.suo
+*.userosscache
 
-# Build results
-bin/
-obj/
-[Bb]uild/
-[Dd]ebug/
-[Rr]elease/
-x64/
-x86/
-
-# Otros
-*.exe
-*.dll
-*.pdb
-*.cache
+## Ignore results of code analysis
+*.lastcodeanalysis
