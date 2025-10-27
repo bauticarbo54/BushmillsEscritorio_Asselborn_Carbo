@@ -1,5 +1,4 @@
-﻿
-Imports System.Data.SqlClient
+﻿Imports System.Data.SqlClient
 Imports System.Security.Cryptography
 Imports System.Text
 
@@ -35,14 +34,13 @@ Public Module DataAccess
     Public Function GetUsuarios() As DataTable
         Using cn As New SqlConnection(ConnStr),
               da As New SqlDataAdapter("
-                SELECT u.id_usuario,
-                       u.nombre_usuario,
+                SELECT u.nombre_usuario,
                        u.nombre,
                        u.apellido,
                        r.tipo_rol AS rol,
                        u.estado
-                FROM dbo.Usuario u
-                INNER JOIN dbo.Rol r ON u.id_rol = r.id_rol
+                FROM Usuario u
+                INNER JOIN Rol r ON u.id_rol = r.id_rol
                 ORDER BY u.nombre_usuario;", cn)
 
             Dim dt As New DataTable()
@@ -53,7 +51,7 @@ Public Module DataAccess
 
 
     Public Function ExisteUsuario(usuario As String) As Boolean
-        Const sql = "SELECT 1 FROM dbo.Usuario WHERE nombre_usuario=@u"
+        Const sql = "SELECT 1 FROM Usuario WHERE nombre_usuario=@u"
         Using cn As New SqlConnection(ConnStr),
               cmd As New SqlCommand(sql, cn)
             cmd.Parameters.AddWithValue("@u", usuario)
@@ -66,8 +64,8 @@ Public Module DataAccess
     Public Function ExisteGerenteActivo() As Boolean
         Const sql = "
             SELECT 1 
-            FROM dbo.Usuario u 
-            INNER JOIN dbo.Rol r ON u.id_rol = r.id_rol 
+            FROM Usuario u 
+            INNER JOIN Rol r ON u.id_rol = r.id_rol 
             WHERE LOWER(r.tipo_rol)='gerente' AND u.estado='A'"
         Using cn As New SqlConnection(ConnStr),
               cmd As New SqlCommand(sql, cn)
@@ -81,7 +79,7 @@ Public Module DataAccess
 
     Public Sub InsertUsuario(usuario As String, nombre As String, apellido As String, passwordPlano As String, idRol As Integer)
         Const sql = "
-            INSERT INTO dbo.Usuario(nombre_usuario, contrasena, nombre, apellido, estado, id_rol)
+            INSERT INTO Usuario(nombre_usuario, contrasena, nombre, apellido, estado, id_rol)
             VALUES (@usuario, @hash, @nombre, @apellido, 'A', @id_rol);"
         Using cn As New SqlConnection(ConnStr),
               cmd As New SqlCommand(sql, cn)
@@ -96,11 +94,10 @@ Public Module DataAccess
     End Sub
 
 
-    ' ⚠️ Ajuste: Ya no se permite cambiar el nombre de usuario (clave primaria)
     Public Sub UpdateUsuario(usuarioOriginal As String, nombre As String, apellido As String,
                              Optional nuevaPassword As String = Nothing, Optional nuevoIdRol As Integer? = Nothing)
 
-        Dim sb As New StringBuilder("UPDATE dbo.Usuario SET nombre=@nombre, apellido=@apellido")
+        Dim sb As New StringBuilder("UPDATE Usuario SET nombre=@nombre, apellido=@apellido")
         If nuevaPassword IsNot Nothing Then sb.Append(", contrasena=@hash")
         If nuevoIdRol.HasValue Then sb.Append(", id_rol=@id_rol")
         sb.Append(" WHERE nombre_usuario=@orig;")
@@ -123,7 +120,7 @@ Public Module DataAccess
 
 
     Public Sub CambiarEstadoUsuario(usuario As String, activar As Boolean)
-        Const sql = "UPDATE dbo.Usuario SET estado = @e WHERE nombre_usuario=@u"
+        Const sql = "UPDATE Usuario SET estado = @e WHERE nombre_usuario=@u"
         Using cn As New SqlConnection(ConnStr),
               cmd As New SqlCommand(sql, cn)
             cmd.Parameters.AddWithValue("@e", If(activar, "A", "I"))
@@ -140,8 +137,8 @@ Public Module DataAccess
 
         Const sql As String = "
             SELECT u.contrasena, u.nombre, r.tipo_rol AS rol, u.estado
-            FROM dbo.Usuario u
-            INNER JOIN dbo.Rol r ON u.id_rol = r.id_rol
+            FROM Usuario u
+            INNER JOIN Rol r ON u.id_rol = r.id_rol
             WHERE u.nombre_usuario=@u;"
 
         Using cn As New SqlConnection(ConnStr),
@@ -181,7 +178,7 @@ Public Module DataAccess
     '================== Roles ==================
     Public Function GetRoles() As DataTable
         Using cn As New SqlConnection(ConnStr),
-              da As New SqlDataAdapter("SELECT id_rol, tipo_rol FROM dbo.Rol ORDER BY id_rol", cn)
+              da As New SqlDataAdapter("SELECT id_rol, tipo_rol FROM Rol ORDER BY id_rol", cn)
             Dim dt As New DataTable()
             da.Fill(dt)
             Return dt
@@ -190,7 +187,7 @@ Public Module DataAccess
 
 
     Public Function GetIdRolPorTipo(tipoRol As String) As Integer
-        Const sql = "SELECT id_rol FROM dbo.Rol WHERE LOWER(tipo_rol) = @tipo_rol"
+        Const sql = "SELECT id_rol FROM Rol WHERE LOWER(tipo_rol) = @tipo_rol"
         Using cn As New SqlConnection(ConnStr),
               cmd As New SqlCommand(sql, cn)
             cmd.Parameters.AddWithValue("@tipo_rol", tipoRol.ToLower())
@@ -198,7 +195,6 @@ Public Module DataAccess
             Return Convert.ToInt32(cmd.ExecuteScalar())
         End Using
     End Function
-
 
 
     '================== PRODUCTOS ==================
@@ -215,9 +211,9 @@ Public Module DataAccess
                p.stock,
                p.proveedor,
                p.estado
-        FROM dbo.Producto p
-        INNER JOIN dbo.Marca m ON p.id_marca = m.id_marca
-        INNER JOIN dbo.Categoria c ON p.id_categoria = c.id_categoria
+        FROM Producto p
+        INNER JOIN Marca m ON p.id_marca = m.id_marca
+        INNER JOIN Categoria c ON p.id_categoria = c.id_categoria
         ORDER BY p.codigo_barras;"
         Using cn As New SqlConnection(ConnStr),
               da As New SqlDataAdapter(sql, cn)
@@ -232,7 +228,7 @@ Public Module DataAccess
                               precio As Decimal, stock As Integer,
                               proveedor As String)
         Const sql As String = "
-        INSERT INTO dbo.Producto
+        INSERT INTO Producto
             (codigo_barras, id_marca, id_categoria, volumen, graduacion, precio, stock, proveedor, estado)
         VALUES
             (@codigo, @marca, @categoria, @volumen, @graduacion, @precio, @stock, @proveedor, 'A');"
@@ -256,7 +252,7 @@ Public Module DataAccess
                               precio As Decimal, stock As Integer,
                               proveedor As String)
         Const sql As String = "
-        UPDATE dbo.Producto
+        UPDATE Producto
         SET codigo_barras=@codigo, id_marca=@marca, id_categoria=@categoria,
             volumen=@volumen, graduacion=@graduacion, precio=@precio,
             stock=@stock, proveedor=@proveedor
@@ -278,10 +274,10 @@ Public Module DataAccess
     End Sub
 
     Public Sub CambiarEstadoProducto(idProducto As Integer, activar As Boolean)
-        Const sql = "UPDATE dbo.Producto SET estado = @e WHERE id_producto=@id;"
+        Const sql = "UPDATE Producto SET estado = @e WHERE id_producto=@id;"
         Using cn As New SqlConnection(ConnStr),
               cmd As New SqlCommand(sql, cn)
-            cmd.Parameters.AddWithValue("@e", If(activar, "A"c, "S"c))
+            cmd.Parameters.AddWithValue("@e", If(activar, "A", "I"))
             cmd.Parameters.AddWithValue("@id", idProducto)
             cn.Open()
             cmd.ExecuteNonQuery()
@@ -289,5 +285,4 @@ Public Module DataAccess
     End Sub
 
 End Module
-
 

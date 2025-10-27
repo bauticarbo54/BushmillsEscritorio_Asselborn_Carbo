@@ -1,10 +1,25 @@
-﻿Public Class FormVentas
+﻿Imports System.Data.SqlClient
+
+Public Class FormVentas
 
     Private detalle As DataTable
     Private totalVenta As Decimal = 0D
+    Private usuarioActual As String = ""
 
     ' Índice de fila seleccionada en el DGV (-1 = ninguna)
     Private selectedRowIndex As Integer = -1
+
+    ' Constructor que recibe el usuario logueado
+    Public Sub New(usuario As String)
+        InitializeComponent()
+        usuarioActual = usuario
+    End Sub
+
+    ' Constructor por defecto
+    Public Sub New()
+        InitializeComponent()
+        usuarioActual = "vendedor" ' Por defecto
+    End Sub
 
     ' =============================
     ' ============ LOAD ===========
@@ -13,9 +28,9 @@
         Me.Text = "Registro de Ventas"
         Me.WindowState = FormWindowState.Normal
 
-        ' Simulación de vendedor (luego vendrá del login)
-        LVendedorID.Text = "6"
-        LNombreVend.Text = "Santiago"
+        ' Mostrar información del vendedor
+        LVendedorID.Text = usuarioActual
+        LNombreVend.Text = ObtenerNombreVendedor(usuarioActual)
 
         ' Tabla del detalle
         PrepararTabla()
@@ -27,12 +42,28 @@
         ' Configurar validación de entrada
         ConfigureInputValidation()
 
-        ' Total inicial: solo el importe (la label "Total:" déjala fija aparte)
+        ' Total inicial
         LTotal.Text = totalVenta.ToString("C2")
 
         ' Foco
         TBDNICliente.Focus()
     End Sub
+
+    Private Function ObtenerNombreVendedor(usuario As String) As String
+        Try
+            Dim ConnStr As String = System.Configuration.ConfigurationManager.ConnectionStrings("BushmillDb").ConnectionString
+
+            Using cn As New SqlConnection(ConnStr)
+                Dim cmd As New SqlCommand("SELECT nombre FROM Usuario WHERE nombre_usuario = @usuario", cn)
+                cmd.Parameters.AddWithValue("@usuario", usuario)
+                cn.Open()
+                Dim resultado = cmd.ExecuteScalar()
+                Return If(resultado IsNot Nothing, resultado.ToString(), usuario)
+            End Using
+        Catch ex As Exception
+            Return usuario
+        End Try
+    End Function
 
     Private Sub ConfigureInputValidation()
         ' Validación para código de barras
@@ -48,7 +79,7 @@
         detalle.Columns.Add("CodigoBarra", GetType(String))
         detalle.Columns.Add("Producto", GetType(String))
         detalle.Columns.Add("Marca", GetType(String))
-        detalle.Columns.Add("Tipo", GetType(String))
+        detalle.Columns.Add("Categoria", GetType(String))
         detalle.Columns.Add("Cantidad", GetType(Integer))
         detalle.Columns.Add("PrecioUnitario", GetType(Decimal))
         detalle.Columns.Add("Subtotal", GetType(Decimal))
@@ -136,12 +167,12 @@
         End If
 
         Dim dr = FormClientes.ObtenerCliente(dni)
-        If dr IsNot Nothing AndAlso dr("Estado").ToString() = "Activo" Then
-            LNombreClienteConf.Text = dr("Nombre").ToString()
+        If dr IsNot Nothing Then
+            LNombreClienteConf.Text = dr("nombre").ToString()
             Return True
         End If
 
-        ' No existe o está inactivo -> proponer alta
+        ' No existe -> proponer alta
         Dim resp = MessageBox.Show("El cliente no existe. ¿Desea registrarlo ahora?",
                                    "Cliente no encontrado",
                                    MessageBoxButtons.YesNo, MessageBoxIcon.Question)
@@ -176,18 +207,17 @@
     End Sub
 
     Private Sub TBCodBarra_TextChanged(sender As Object, e As EventArgs)
-        ' Limitar longitud del código de barras (ejemplo: 13 dígitos EAN-13)
-        If TBCodBarra.Text.Length > 13 Then
-            TBCodBarra.Text = TBCodBarra.Text.Substring(0, 13)
+        ' Limitar longitud del código de barras
+        If TBCodBarra.Text.Length > 50 Then
+            TBCodBarra.Text = TBCodBarra.Text.Substring(0, 50)
             TBCodBarra.SelectionStart = TBCodBarra.Text.Length
-            MessageBox.Show("El código de barras no puede tener más de 13 dígitos.", "Validación",
+            MessageBox.Show("El código de barras no puede tener más de 50 dígitos.", "Validación",
                             MessageBoxButtons.OK, MessageBoxIcon.Warning)
         End If
     End Sub
 
     ' --- VALIDACIÓN DE CANTIDAD MÁXIMA ---
     Private Sub NUDCantidad_ValueChanged(sender As Object, e As EventArgs)
-        ' Establecer un límite máximo razonable para la cantidad
         If NUDCantidad.Value > 1000 Then
             NUDCantidad.Value = 1000
             MessageBox.Show("La cantidad no puede ser mayor a 1000 unidades.", "Validación",
@@ -253,45 +283,82 @@
 
     ' --- VALIDACIÓN DE PRODUCTO EXISTENTE ---
     Private Function ValidarProductoExistente(codigoBarra As String) As Boolean
-        ' Simulación - luego esto vendrá de tu base de datos
-        Dim productosExistentes As New List(Of String) From {"1234567890123", "123", "456", "789", "111", "222"}
+        Try
+            Dim ConnStr As String = System.Configuration.ConfigurationManager.ConnectionStrings("BushmillDb").ConnectionString
 
-        If Not productosExistentes.Contains(codigoBarra) Then
-            MessageBox.Show("El código de barras no corresponde a un producto existente.", "Validación",
-                            MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Using cn As New SqlConnection(ConnStr)
+                Dim cmd As New SqlCommand("SELECT 1 FROM Producto WHERE codigo_barras = @codigo AND estado = 'A'", cn)
+                cmd.Parameters.AddWithValue("@codigo", codigoBarra)
+                cn.Open()
+                Return cmd.ExecuteScalar() IsNot Nothing
+            End Using
+        Catch ex As Exception
+            MessageBox.Show("Error al verificar producto: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Return False
-        End If
-
-        Return True
+        End Try
     End Function
 
     ' --- VALIDACIÓN DE STOCK DISPONIBLE ---
     Private Function ValidarStockDisponible(codigoBarra As String, cantidadSolicitada As Integer) As Boolean
-        ' Simulación de validación de stock - luego vendrá de BD
-        Dim stockDisponible As Integer = 0
+        Try
+            Dim ConnStr As String = System.Configuration.ConfigurationManager.ConnectionStrings("BushmillDb").ConnectionString
 
-        Select Case codigoBarra
-            Case "1234567890123", "123"
-                stockDisponible = 50
-            Case "456"
-                stockDisponible = 25
-            Case "789"
-                stockDisponible = 100
-            Case "111"
-                stockDisponible = 10
-            Case "222"
-                stockDisponible = 5
-            Case Else
-                stockDisponible = 0
-        End Select
+            Using cn As New SqlConnection(ConnStr)
+                Dim cmd As New SqlCommand("SELECT stock FROM Producto WHERE codigo_barras = @codigo AND estado = 'A'", cn)
+                cmd.Parameters.AddWithValue("@codigo", codigoBarra)
+                cn.Open()
+                Dim stockDisponible = cmd.ExecuteScalar()
 
-        If cantidadSolicitada > stockDisponible Then
-            MessageBox.Show($"Stock insuficiente. Disponible: {stockDisponible} unidades", "Validación",
-                            MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                If stockDisponible IsNot Nothing Then
+                    Dim stock As Integer = Convert.ToInt32(stockDisponible)
+                    If cantidadSolicitada > stock Then
+                        MessageBox.Show($"Stock insuficiente. Disponible: {stock} unidades", "Validación",
+                                        MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                        Return False
+                    End If
+                    Return True
+                Else
+                    MessageBox.Show("Producto no encontrado.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    Return False
+                End If
+            End Using
+        Catch ex As Exception
+            MessageBox.Show("Error al verificar stock: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Return False
-        End If
+        End Try
+    End Function
 
-        Return True
+    ' --- OBTENER DATOS DEL PRODUCTO DESDE BD ---
+    Private Function ObtenerDatosProducto(codigoBarra As String) As (Producto As String, Marca As String, Categoria As String, Precio As Decimal, Stock As Integer)
+        Try
+            Dim ConnStr As String = System.Configuration.ConfigurationManager.ConnectionStrings("BushmillDb").ConnectionString
+
+            Using cn As New SqlConnection(ConnStr)
+                Dim cmd As New SqlCommand("SELECT p.codigo_barras, m.nombre as marca, c.nombre as categoria, p.precio, p.stock " &
+                                          "FROM Producto p " &
+                                          "INNER JOIN Marca m ON p.id_marca = m.id_marca " &
+                                          "INNER JOIN Categoria c ON p.id_categoria = c.id_categoria " &
+                                          "WHERE p.codigo_barras = @codigo AND p.estado = 'A'", cn)
+                cmd.Parameters.AddWithValue("@codigo", codigoBarra)
+                cn.Open()
+
+                Using reader = cmd.ExecuteReader()
+                    If reader.Read() Then
+                        Dim producto = $"{reader("marca")} - {reader("categoria")}"
+                        Dim marca = reader("marca").ToString()
+                        Dim categoria = reader("categoria").ToString()
+                        Dim precio = Convert.ToDecimal(reader("precio"))
+                        Dim stock = Convert.ToInt32(reader("stock"))
+
+                        Return (producto, marca, categoria, precio, stock)
+                    End If
+                End Using
+            End Using
+        Catch ex As Exception
+            MessageBox.Show("Error al obtener datos del producto: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+
+        Return ("", "", "", 0D, 0)
     End Function
 
     ' --- VALIDACIÓN DE STOCK FINAL ---
@@ -309,27 +376,6 @@
             End If
         Next
         Return True
-    End Function
-
-    ' --- VALIDACIÓN DE PRECIO EN SIMULACIÓN ---
-    Private Function ObtenerPrecioProducto(codigoBarra As String) As Decimal
-        ' Simulación de precios - luego vendrá de BD
-        Dim precios As New Dictionary(Of String, Decimal) From {
-            {"1234567890123", 120D},
-            {"123", 150D},
-            {"456", 200D},
-            {"789", 75.5D},
-            {"111", 300D},
-            {"222", 89.9D}
-        }
-
-        If precios.ContainsKey(codigoBarra) Then
-            Return precios(codigoBarra)
-        Else
-            MessageBox.Show("No se pudo obtener el precio para este producto.", "Error",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error)
-            Return 0D
-        End If
     End Function
 
     ' --- VALIDACIÓN COMPLETA ANTES DE CONFIRMAR VENTA ---
@@ -390,39 +436,16 @@
     Private Sub BAgregarProducto_Click(sender As Object, e As EventArgs) Handles BAgregarProducto.Click
         If Not ValidarProducto() Then Exit Sub
 
-        ' Obtener datos del producto (simulación - luego vendrá de BD)
-        Dim producto As String = ""
-        Dim marca As String = ""
-        Dim tipo As String = ""
-
-        Select Case TBCodBarra.Text.Trim()
-            Case "1234567890123", "123"
-                producto = "Cerveza"
-                marca = "Quilmes"
-                tipo = "Lager"
-            Case "456"
-                producto = "Vino"
-                marca = "Trapiche"
-                tipo = "Malbec"
-            Case "789"
-                producto = "Gaseosa"
-                marca = "Coca-Cola"
-                tipo = "Cola"
-            Case "111"
-                producto = "Whisky"
-                marca = "Johnnie Walker"
-                tipo = "Red Label"
-            Case "222"
-                producto = "Agua Mineral"
-                marca = "Villavicencio"
-                tipo = "Sin Gas"
-        End Select
-
-        Dim precio As Decimal = ObtenerPrecioProducto(TBCodBarra.Text.Trim())
-        If precio <= 0 Then Exit Sub
+        ' Obtener datos del producto desde BD
+        Dim datosProducto = ObtenerDatosProducto(TBCodBarra.Text.Trim())
+        If datosProducto.Precio <= 0 Then
+            MessageBox.Show("No se pudo obtener el precio del producto.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Exit Sub
+        End If
 
         Dim cod As String = TBCodBarra.Text.Trim()
         Dim cant As Integer = Convert.ToInt32(NUDCantidad.Value)
+        Dim precio As Decimal = datosProducto.Precio
 
         ' Si hay fila seleccionada -> ACTUALIZAR o ELIMINAR
         If selectedRowIndex >= 0 AndAlso selectedRowIndex < DGVDetalleVenta.Rows.Count Then
@@ -466,7 +489,7 @@
         Else
             ' Crear nueva fila
             Dim subtotal As Decimal = cant * precio
-            detalle.Rows.Add(cod, producto, marca, tipo, cant, precio, subtotal)
+            detalle.Rows.Add(cod, datosProducto.Producto, datosProducto.Marca, datosProducto.Categoria, cant, precio, subtotal)
         End If
 
         RecalcularTotal()
@@ -477,7 +500,6 @@
     ' ============ CONFIRMAR VENTA ==============
     ' ===========================================
     Private Sub BConfirmarVenta_Click(sender As Object, e As EventArgs) Handles BConfirmarVenta.Click
-        ' Usar validación completa en lugar de solo validar cliente
         If Not ValidarVentaCompleta() Then Exit Sub
 
         ' Confirmación final antes de procesar
@@ -493,20 +515,82 @@
             Return
         End If
 
-        ' Aquí iría el guardado real (try/catch + persistencia)
         Try
-            ' Simulación de guardado
-            MessageBox.Show("Venta registrada correctamente.", "Éxito",
-                            MessageBoxButtons.OK, MessageBoxIcon.Information)
-
-            ' Reset para nueva venta
-            ResetearVenta()
+            ' Guardar venta en la base de datos
+            If GuardarVentaEnBD() Then
+                MessageBox.Show("Venta registrada correctamente.", "Éxito",
+                                MessageBoxButtons.OK, MessageBoxIcon.Information)
+                ResetearVenta()
+            Else
+                MessageBox.Show("Error al registrar la venta.", "Error",
+                                MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End If
 
         Catch ex As Exception
             MessageBox.Show($"Error al registrar la venta: {ex.Message}", "Error",
                             MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
+
+    Private Function GuardarVentaEnBD() As Boolean
+        Dim ConnStr As String = System.Configuration.ConfigurationManager.ConnectionStrings("BushmillDb").ConnectionString
+
+        Using cn As New SqlConnection(ConnStr)
+            cn.Open()
+            Dim transaction = cn.BeginTransaction()
+
+            Try
+                ' 1. Insertar cabecera de venta
+                Dim cmdVenta As New SqlCommand(
+                    "INSERT INTO Venta (dni_cliente, nombre_usuario, total_venta) " &
+                    "OUTPUT INSERTED.num_venta " &
+                    "VALUES (@dni_cliente, @nombre_usuario, @total_venta)", cn, transaction)
+
+                cmdVenta.Parameters.AddWithValue("@dni_cliente", TBDNICliente.Text.Trim())
+                cmdVenta.Parameters.AddWithValue("@nombre_usuario", usuarioActual)
+                cmdVenta.Parameters.AddWithValue("@total_venta", totalVenta)
+
+                Dim numVenta = Convert.ToInt32(cmdVenta.ExecuteScalar())
+
+                ' 2. Insertar detalles y actualizar stock
+                For Each row As DataRow In detalle.Rows
+                    If row.RowState <> DataRowState.Deleted Then
+                        ' Obtener ID del producto
+                        Dim cmdProducto As New SqlCommand("SELECT id_producto FROM Producto WHERE codigo_barras = @codigo", cn, transaction)
+                        cmdProducto.Parameters.AddWithValue("@codigo", row("CodigoBarra").ToString())
+                        Dim idProducto = Convert.ToInt32(cmdProducto.ExecuteScalar())
+
+                        ' Insertar detalle
+                        Dim cmdDetalle As New SqlCommand(
+                            "INSERT INTO DetalleVenta (num_venta, id_producto, cantidad, subtotal) " &
+                            "VALUES (@num_venta, @id_producto, @cantidad, @subtotal)", cn, transaction)
+
+                        cmdDetalle.Parameters.AddWithValue("@num_venta", numVenta)
+                        cmdDetalle.Parameters.AddWithValue("@id_producto", idProducto)
+                        cmdDetalle.Parameters.AddWithValue("@cantidad", Convert.ToInt32(row("Cantidad")))
+                        cmdDetalle.Parameters.AddWithValue("@subtotal", Convert.ToDecimal(row("Subtotal")))
+
+                        cmdDetalle.ExecuteNonQuery()
+
+                        ' Actualizar stock
+                        Dim cmdStock As New SqlCommand(
+                            "UPDATE Producto SET stock = stock - @cantidad WHERE id_producto = @id_producto", cn, transaction)
+
+                        cmdStock.Parameters.AddWithValue("@cantidad", Convert.ToInt32(row("Cantidad")))
+                        cmdStock.Parameters.AddWithValue("@id_producto", idProducto)
+                        cmdStock.ExecuteNonQuery()
+                    End If
+                Next
+
+                transaction.Commit()
+                Return True
+
+            Catch ex As Exception
+                transaction.Rollback()
+                Throw
+            End Try
+        End Using
+    End Function
 
     ' ===========================================
     ' ============== CANCELAR ===================

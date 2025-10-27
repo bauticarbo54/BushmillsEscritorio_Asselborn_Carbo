@@ -1,6 +1,10 @@
-﻿Public Class FormClientes
+﻿Imports System.Data.SqlClient
 
-    Private Shared clientes As DataTable
+Public Class FormClientes
+
+    Private clientes As DataTable
+    Private clienteEditando As Boolean = False
+    Private dniOriginal As String = ""
 
     Public Property ClienteAgregado As DataRow
     Public Property CerrarAlAgregar As Boolean = False
@@ -12,14 +16,38 @@
     End Sub
 
     Public Shared Function ExisteCliente(dni As String) As Boolean
-        If clientes Is Nothing OrElse String.IsNullOrWhiteSpace(dni) Then Return False
-        Return clientes.AsEnumerable().Any(Function(r) r.Field(Of String)("DNI") = dni _
-                                     AndAlso r.Field(Of String)("Estado") = "Activo")
+        Try
+            Dim ConnStr As String = System.Configuration.ConfigurationManager.ConnectionStrings("BushmillDb").ConnectionString
+
+            Using cn As New SqlConnection(ConnStr)
+                Dim cmd As New SqlCommand("SELECT 1 FROM Cliente WHERE dni = @dni", cn)
+                cmd.Parameters.AddWithValue("@dni", dni)
+                cn.Open()
+                Return cmd.ExecuteScalar() IsNot Nothing
+            End Using
+        Catch ex As Exception
+            MessageBox.Show("Error al verificar cliente: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return False
+        End Try
     End Function
 
     Public Shared Function ObtenerCliente(dni As String) As DataRow
-        If clientes Is Nothing Then Return Nothing
-        Return clientes.AsEnumerable().FirstOrDefault(Function(r) r.Field(Of String)("DNI") = dni)
+        Try
+            Dim ConnStr As String = System.Configuration.ConfigurationManager.ConnectionStrings("BushmillDb").ConnectionString
+
+            Using cn As New SqlConnection(ConnStr)
+                Dim da As New SqlDataAdapter("SELECT dni, nombre, telefono FROM Cliente WHERE dni = @dni", cn)
+                da.SelectCommand.Parameters.AddWithValue("@dni", dni)
+                Dim dt As New DataTable()
+                da.Fill(dt)
+                If dt.Rows.Count > 0 Then
+                    Return dt.Rows(0)
+                End If
+            End Using
+        Catch ex As Exception
+            MessageBox.Show("Error al obtener cliente: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+        Return Nothing
     End Function
 
     Private Sub FormClientes_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -35,13 +63,8 @@
         BSuspender.TabIndex = 5
         DGVClientes.TabIndex = 6
 
-        ' Crear la tabla solo si aún no existe
-        If clientes Is Nothing Then
-            PrepararTabla()
-            DGVClientes.DataSource = clientes
-        End If
-
-        DGVClientes.DataSource = clientes
+        ' Cargar clientes desde la base de datos
+        CargarClientesDesdeBD()
 
         ' Ajustes DataGridView
         DGVClientes.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
@@ -51,6 +74,30 @@
         ConfigureInputValidation()
 
         Me.AcceptButton = BAgregar
+    End Sub
+
+    Private Sub CargarClientesDesdeBD()
+        Try
+            Dim ConnStr As String = System.Configuration.ConfigurationManager.ConnectionStrings("BushmillDb").ConnectionString
+
+            Using cn As New SqlConnection(ConnStr)
+                Dim da As New SqlDataAdapter("SELECT dni, nombre, telefono FROM Cliente ORDER BY nombre", cn)
+                clientes = New DataTable()
+                da.Fill(clientes)
+
+                ' Agregar columna Estado (siempre activo en BD)
+                clientes.Columns.Add("Estado", GetType(String))
+                For Each row As DataRow In clientes.Rows
+                    row("Estado") = "Activo"
+                Next
+
+                DGVClientes.DataSource = clientes
+            End Using
+        Catch ex As Exception
+            MessageBox.Show("Error al cargar clientes: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ' Crear tabla vacía si hay error
+            PrepararTabla()
+        End Try
     End Sub
 
     Private Sub ConfigureInputValidation()
@@ -97,6 +144,7 @@
         clientes.Columns.Add("Nombre", GetType(String))
         clientes.Columns.Add("Telefono", GetType(String))
         clientes.Columns.Add("Estado", GetType(String))
+        DGVClientes.DataSource = clientes
     End Sub
 
     ' --- VALIDACIÓN GENERAL DE CAMPOS ---
@@ -192,12 +240,8 @@
         ' Validar todos los campos antes de proceder
         If Not ValidarCampos() Then Exit Sub
 
-        ' Verificar si el DNI ya existe
-        Dim dniExistente = clientes.AsEnumerable().
-        Where(Function(row) row.Field(Of String)("DNI") = TBDNI.Text).
-        FirstOrDefault()
-
-        If dniExistente IsNot Nothing Then
+        ' Verificar si el DNI ya existe en la base de datos
+        If ExisteCliente(TBDNI.Text) Then
             MessageBox.Show("El DNI ya existe en la base de datos.", "Error",
                         MessageBoxButtons.OK, MessageBoxIcon.Error)
             TBDNI.Focus()
@@ -205,31 +249,50 @@
             Exit Sub
         End If
 
-        Dim nuevaFila = clientes.NewRow()
-        nuevaFila("DNI") = TBDNI.Text
-        nuevaFila("Nombre") = TBNombre.Text.Trim()
-        nuevaFila("Telefono") = TBTelefono.Text
-        nuevaFila("Estado") = "Activo"
-        clientes.Rows.Add(nuevaFila)
+        Try
+            Dim ConnStr As String = System.Configuration.ConfigurationManager.ConnectionStrings("BushmillDb").ConnectionString
 
-        ClienteAgregado = nuevaFila
+            ' Insertar en la base de datos
+            Using cn As New SqlConnection(ConnStr)
+                Dim cmd As New SqlCommand("INSERT INTO Cliente (dni, nombre, telefono) VALUES (@dni, @nombre, @telefono)", cn)
+                cmd.Parameters.AddWithValue("@dni", TBDNI.Text)
+                cmd.Parameters.AddWithValue("@nombre", TBNombre.Text.Trim())
+                cmd.Parameters.AddWithValue("@telefono", TBTelefono.Text)
 
-        If CerrarAlAgregar Then
-            ' Abierto desde Ventas -> cerrar y devolver
-            MessageBox.Show("Cliente agregado correctamente.", "Éxito",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information)
-            Me.DialogResult = DialogResult.OK
-            Me.Close()
-            Return
-        Else
-            ' Gestor de clientes -> permanecer abierto
-            MessageBox.Show("Cliente agregado correctamente.", "Éxito",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information)
-            DGVClientes.Refresh()
-            LimpiarCampos()
-            TBDNI.Focus()
-            Return
-        End If
+                cn.Open()
+                cmd.ExecuteNonQuery()
+            End Using
+
+            ' Agregar a la tabla local
+            Dim nuevaFila = clientes.NewRow()
+            nuevaFila("DNI") = TBDNI.Text
+            nuevaFila("Nombre") = TBNombre.Text.Trim()
+            nuevaFila("Telefono") = TBTelefono.Text
+            nuevaFila("Estado") = "Activo"
+            clientes.Rows.Add(nuevaFila)
+
+            ClienteAgregado = nuevaFila
+
+            If CerrarAlAgregar Then
+                ' Abierto desde Ventas -> cerrar y devolver
+                MessageBox.Show("Cliente agregado correctamente.", "Éxito",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information)
+                Me.DialogResult = DialogResult.OK
+                Me.Close()
+                Return
+            Else
+                ' Gestor de clientes -> permanecer abierto
+                MessageBox.Show("Cliente agregado correctamente.", "Éxito",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information)
+                DGVClientes.Refresh()
+                LimpiarCampos()
+                TBDNI.Focus()
+                Return
+            End If
+
+        Catch ex As Exception
+            MessageBox.Show("Error al agregar cliente: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
     End Sub
 
     ' --- BOTÓN EDITAR ---
@@ -245,34 +308,33 @@
             Exit Sub
         End If
 
-        Dim row As DataGridViewRow = DGVClientes.SelectedRows(0)
+        Try
+            Dim ConnStr As String = System.Configuration.ConfigurationManager.ConnectionStrings("BushmillDb").ConnectionString
 
-        ' Verificar si el nuevo DNI ya existe (excepto en la fila actual)
-        Dim dniNuevo = TBDNI.Text
-        Dim dniActual = row.Cells("DNI").Value.ToString()
+            ' Actualizar en la base de datos
+            Using cn As New SqlConnection(ConnStr)
+                Dim cmd As New SqlCommand("UPDATE Cliente SET nombre = @nombre, telefono = @telefono WHERE dni = @dni", cn)
+                cmd.Parameters.AddWithValue("@dni", TBDNI.Text)
+                cmd.Parameters.AddWithValue("@nombre", TBNombre.Text.Trim())
+                cmd.Parameters.AddWithValue("@telefono", TBTelefono.Text)
 
-        If dniNuevo <> dniActual Then
-            Dim dniExistente = clientes.AsEnumerable().
-                Where(Function(r) r.Field(Of String)("DNI") = dniNuevo AndAlso
-                                 r.Field(Of String)("DNI") <> dniActual).
-                FirstOrDefault()
+                cn.Open()
+                cmd.ExecuteNonQuery()
+            End Using
 
-            If dniExistente IsNot Nothing Then
-                MessageBox.Show("El DNI ya existe en otro cliente.", "Error",
-                                MessageBoxButtons.OK, MessageBoxIcon.Error)
-                TBDNI.Focus()
-                TBDNI.SelectAll()
-                Exit Sub
-            End If
-        End If
+            ' Actualizar en la tabla local
+            Dim row As DataGridViewRow = DGVClientes.SelectedRows(0)
+            row.Cells("Nombre").Value = TBNombre.Text.Trim()
+            row.Cells("Telefono").Value = TBTelefono.Text
 
-        row.Cells("DNI").Value = TBDNI.Text
-        row.Cells("Nombre").Value = TBNombre.Text.Trim()
-        row.Cells("Telefono").Value = TBTelefono.Text
-
-        MessageBox.Show("Cliente actualizado correctamente.", "Éxito",
+            MessageBox.Show("Cliente actualizado correctamente.", "Éxito",
                         MessageBoxButtons.OK, MessageBoxIcon.Information)
-        LimpiarCampos()
+            LimpiarCampos()
+            clienteEditando = False
+
+        Catch ex As Exception
+            MessageBox.Show("Error al actualizar cliente: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
     End Sub
 
     ' --- BOTÓN SUSPENDER / REACTIVAR ---
@@ -280,11 +342,14 @@
         If DGVClientes.SelectedRows.Count > 0 Then
             Dim row As DataGridViewRow = DGVClientes.SelectedRows(0)
             Dim estadoActual As String = row.Cells("Estado").Value.ToString()
+            Dim dni As String = row.Cells("DNI").Value.ToString()
 
             If estadoActual = "Activo" Then
+                ' En una base de datos real, podrías tener un campo "activo" o eliminar el registro
+                ' Por ahora solo lo marcamos como inactivo localmente
                 row.Cells("Estado").Value = "Inactivo"
                 ActualizarBotonSuspender("Inactivo")
-                MessageBox.Show("El cliente fue suspendido.", "Información",
+                MessageBox.Show("El cliente fue marcado como inactivo.", "Información",
                                 MessageBoxButtons.OK, MessageBoxIcon.Information)
             Else
                 row.Cells("Estado").Value = "Activo"
@@ -338,6 +403,8 @@
         TBDNI.Clear()
         TBNombre.Clear()
         TBTelefono.Clear()
+        clienteEditando = False
+        dniOriginal = ""
     End Sub
 
     ' --- VALIDACIÓN EN TIEMPO REAL PARA DNI ---
@@ -352,7 +419,6 @@
 
     ' --- VALIDACIÓN EN TIEMPO REAL PARA NOMBRE ---
     Private Sub TBNombre_TextChanged(sender As Object, e As EventArgs) Handles TBNombre.TextChanged
-        ' Limitar a 50 caracteres máximo para nombre
         If TBNombre.Text.Length > 50 Then
             TBNombre.Text = TBNombre.Text.Substring(0, 50)
             TBNombre.SelectionStart = TBNombre.Text.Length
@@ -363,7 +429,6 @@
 
     ' --- VALIDACIÓN EN TIEMPO REAL PARA TELÉFONO ---
     Private Sub TBTelefono_TextChanged(sender As Object, e As EventArgs) Handles TBTelefono.TextChanged
-        ' Limitar a 15 caracteres máximo para teléfono
         If TBTelefono.Text.Length > 15 Then
             TBTelefono.Text = TBTelefono.Text.Substring(0, 15)
             TBTelefono.SelectionStart = TBTelefono.Text.Length

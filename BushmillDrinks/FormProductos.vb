@@ -12,95 +12,103 @@ Public Class FormProductos
         ' Configurar validación de campos
         ConfigurarValidaciones()
 
-
         CargarProductosDesdeBD()
         FormatearDataGridView()
 
         CargarMarcas()
         CargarCategorias()
 
-
-        ' Formato de columnas
-        FormatearDataGridView()
-
-        ' Datos de prueba para combos
-        'If CBCategoria.Items.Count = 0 Then
-        '    CBCategoria.Items.AddRange({"Vino", "Cerveza", "Whisky", "Vodka", "Gin", "Ron", "Fernet", "Aperitivo"})
-        'End If
-        'If CBMarca.Items.Count = 0 Then
-        '    CBMarca.Items.AddRange({"Luigi Bosca", "Quilmes", "Johnnie Walker", "Absolut", "Bacardi", "Tanqueray", "Branca", "Campari"})
-        'End If
-
         ' Configurar controles
         ConfigurarControles()
 
+        ' Configurar AutoComplete para ComboBox
+        ConfigurarAutoComplete()
 
+        TBCodBarra.Focus()
+    End Sub
 
+    Private Sub ConfigurarAutoComplete()
+        ' Configurar AutoComplete para Marca
+        CBMarca.DropDownStyle = ComboBoxStyle.DropDown
+        CBMarca.AutoCompleteMode = AutoCompleteMode.SuggestAppend
+        CBMarca.AutoCompleteSource = AutoCompleteSource.ListItems
 
+        ' Configurar AutoComplete para Categoría
+        CBCategoria.DropDownStyle = ComboBoxStyle.DropDown
+        CBCategoria.AutoCompleteMode = AutoCompleteMode.SuggestAppend
+        CBCategoria.AutoCompleteSource = AutoCompleteSource.ListItems
     End Sub
 
     Private Sub CargarProductosDesdeBD()
         Try
-            AbrirConexion()
-            Dim query As String = "SELECT * FROM Producto"
-            Dim adaptador As New SqlDataAdapter(query, Conex)
-            Dim dt As New DataTable()
-            adaptador.Fill(dt)
-            productos = dt
-            DGVProductos.DataSource = productos
-            CerrarConexion()
+            Dim ConnStr As String = System.Configuration.ConfigurationManager.ConnectionStrings("BushmillDb").ConnectionString
+
+            Using cn As New SqlConnection(ConnStr)
+                Dim query As String = "SELECT p.codigo_barras, p.nombre, c.nombre as categoria, m.nombre as marca, p.precio, " &
+                                      "p.volumen, p.graduacion, p.proveedor, p.stock, p.estado " &
+                                      "FROM Producto p " &
+                                      "INNER JOIN Categoria c ON p.id_categoria = c.id_categoria " &
+                                      "INNER JOIN Marca m ON p.id_marca = m.id_marca " &
+                                      "ORDER BY p.codigo_barras"
+                Dim adaptador As New SqlDataAdapter(query, cn)
+                productos = New DataTable()
+                adaptador.Fill(productos)
+                DGVProductos.DataSource = productos
+            End Using
         Catch ex As Exception
             MessageBox.Show("Error al cargar productos: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            PrepararTabla()
         End Try
     End Sub
 
     Private Sub CargarMarcas()
         Try
-            Conex.Open()
-            Dim cmd As New SqlCommand("SELECT id_marca, nombre FROM Marca", Conex)
-            Dim reader As SqlDataReader = cmd.ExecuteReader()
+            Dim ConnStr As String = System.Configuration.ConfigurationManager.ConnectionStrings("BushmillDb").ConnectionString
 
-            Dim dt As New DataTable()
-            dt.Load(reader)
+            Using cn As New SqlConnection(ConnStr)
+                Dim cmd As New SqlCommand("SELECT id_marca, nombre FROM Marca ORDER BY nombre", cn)
+                cn.Open()
+                Dim reader As SqlDataReader = cmd.ExecuteReader()
 
-            CBMarca.DataSource = dt
-            CBMarca.DisplayMember = "nombre"   ' Lo que se muestra
-            CBMarca.ValueMember = "id_marca"         ' Valor interno
+                Dim dt As New DataTable()
+                dt.Load(reader)
 
-            Conex.Close()
+                CBMarca.DataSource = dt
+                CBMarca.DisplayMember = "nombre"
+                CBMarca.ValueMember = "id_marca"
+            End Using
         Catch ex As Exception
-            MessageBox.Show("Error al cargar marcas: " & ex.Message)
-        Finally
-            If Conex.State = ConnectionState.Open Then Conex.Close()
+            MessageBox.Show("Error al cargar marcas: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
     Private Sub CargarCategorias()
         Try
-            Conex.Open()
-            Dim cmd As New SqlCommand("SELECT id_categoria, nombre FROM Categoria", Conex)
-            Dim reader As SqlDataReader = cmd.ExecuteReader()
+            Dim ConnStr As String = System.Configuration.ConfigurationManager.ConnectionStrings("BushmillDb").ConnectionString
 
-            Dim dt As New DataTable()
-            dt.Load(reader)
+            Using cn As New SqlConnection(ConnStr)
+                Dim cmd As New SqlCommand("SELECT id_categoria, nombre FROM Categoria ORDER BY nombre", cn)
+                cn.Open()
+                Dim reader As SqlDataReader = cmd.ExecuteReader()
 
-            CBCategoria.DataSource = dt
-            CBCategoria.DisplayMember = "nombre"
-            CBCategoria.ValueMember = "id_categoria"
+                Dim dt As New DataTable()
+                dt.Load(reader)
 
-            Conex.Close()
+                CBCategoria.DataSource = dt
+                CBCategoria.DisplayMember = "nombre"
+                CBCategoria.ValueMember = "id_categoria"
+            End Using
         Catch ex As Exception
-            MessageBox.Show("Error al cargar categorías: " & ex.Message)
-        Finally
-            If Conex.State = ConnectionState.Open Then Conex.Close()
+            MessageBox.Show("Error al cargar categorías: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
     Private Sub ConfigurarValidaciones()
         ' Configurar máximo de caracteres
-        TBCodBarra.MaxLength = 20
-        TBVolumen.MaxLength = 6 ' Máximo 999999 cm³
-        TBGraduacion.MaxLength = 10
+        TBCodBarra.MaxLength = 50
+        TBNombre.MaxLength = 100 ' Nuevo campo nombre
+        TBVolumen.MaxLength = 10
+        TBGraduacion.MaxLength = 20
         TBProveedor.MaxLength = 100
 
         ' Configurar NUDs
@@ -119,16 +127,22 @@ Public Class FormProductos
     Private Sub ConfigurarControles()
         ' ToolTips para ayudar al usuario
         Dim toolTip As New ToolTip()
-        toolTip.SetToolTip(TBCodBarra, "Ingrese código de barras numérico (máx. 20 dígitos)")
-        toolTip.SetToolTip(TBVolumen, "Volumen en centímetros cúbicos (solo números, ej: 750, 1000)")
-        toolTip.SetToolTip(TBGraduacion, "Ejemplo: 12.5%, 40% vol")
-        toolTip.SetToolTip(TBProveedor, "Nombre del proveedor (máx. 100 caracteres)")
+        toolTip.SetToolTip(TBCodBarra, "Ingrese código de barras")
+        toolTip.SetToolTip(TBNombre, "Nombre específico de la bebida (ej: Stout, Malbec, Red Label)") ' Nuevo tooltip
+        toolTip.SetToolTip(TBVolumen, "Volumen en litros (ej: 0.75, 1.00)")
+        toolTip.SetToolTip(TBGraduacion, "Ejemplo: 12.5, 40.0 (sin símbolo %)")
+        toolTip.SetToolTip(TBProveedor, "Nombre del proveedor")
         toolTip.SetToolTip(NUDStock, "Cantidad en stock (0-10000 unidades)")
+
+        ' ToolTips para ComboBox con AutoComplete
+        toolTip.SetToolTip(CBMarca, "Seleccione una marca existente o escriba una nueva")
+        toolTip.SetToolTip(CBCategoria, "Seleccione una categoría existente o escriba una nueva")
     End Sub
 
     Private Sub PrepararTabla()
         productos = New DataTable()
         productos.Columns.Add("CodigoBarra", GetType(String))
+        productos.Columns.Add("Nombre", GetType(String)) ' Nueva columna
         productos.Columns.Add("Categoria", GetType(String))
         productos.Columns.Add("Marca", GetType(String))
         productos.Columns.Add("Precio", GetType(Decimal))
@@ -137,9 +151,17 @@ Public Class FormProductos
         productos.Columns.Add("Proveedor", GetType(String))
         productos.Columns.Add("Stock", GetType(Integer))
         productos.Columns.Add("Estado", GetType(String))
+        DGVProductos.DataSource = productos
     End Sub
 
     Private Sub FormatearDataGridView()
+        ' Autoajustar columnas
+        DGVProductos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+        DGVProductos.SelectionMode = DataGridViewSelectionMode.FullRowSelect
+        DGVProductos.ReadOnly = True
+        DGVProductos.AllowUserToAddRows = False
+        DGVProductos.RowHeadersVisible = False
+
         ' Formato del precio como moneda
         If DGVProductos.Columns.Contains("Precio") Then
             DGVProductos.Columns("Precio").DefaultCellStyle.Format = "C2"
@@ -151,38 +173,85 @@ Public Class FormProductos
             DGVProductos.Columns("Stock").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
             DGVProductos.Columns("Stock").DefaultCellStyle.Format = "N0"
         End If
-
-        ' Autoajustar columnas
-        DGVProductos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-        DGVProductos.SelectionMode = DataGridViewSelectionMode.FullRowSelect
-        DGVProductos.ReadOnly = True
-        DGVProductos.AllowUserToAddRows = False
-        DGVProductos.RowHeadersVisible = False
     End Sub
+
+    ' --- FUNCIONES PARA MANEJAR MARCAS Y CATEGORÍAS NUEVAS ---
+    Private Function ObtenerOInsertarMarca(nombreMarca As String) As Integer
+        Try
+            Dim ConnStr As String = System.Configuration.ConfigurationManager.ConnectionStrings("BushmillDb").ConnectionString
+
+            Using cn As New SqlConnection(ConnStr)
+                ' Primero verificar si existe
+                Dim cmdVerificar As New SqlCommand("SELECT id_marca FROM Marca WHERE nombre = @nombre", cn)
+                cmdVerificar.Parameters.AddWithValue("@nombre", nombreMarca.Trim())
+                cn.Open()
+
+                Dim resultado = cmdVerificar.ExecuteScalar()
+                If resultado IsNot Nothing Then
+                    Return Convert.ToInt32(resultado)
+                End If
+
+                ' Si no existe, insertar nueva marca
+                Dim cmdInsertar As New SqlCommand("INSERT INTO Marca (nombre) OUTPUT INSERTED.id_marca VALUES (@nombre)", cn)
+                cmdInsertar.Parameters.AddWithValue("@nombre", nombreMarca.Trim())
+                Dim nuevoId = Convert.ToInt32(cmdInsertar.ExecuteScalar())
+
+                ' Recargar combo de marcas
+                CargarMarcas()
+                CBMarca.Text = nombreMarca.Trim()
+
+                Return nuevoId
+            End Using
+        Catch ex As Exception
+            MessageBox.Show("Error al gestionar marca: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return -1
+        End Try
+    End Function
+
+    Private Function ObtenerOInsertarCategoria(nombreCategoria As String) As Integer
+        Try
+            Dim ConnStr As String = System.Configuration.ConfigurationManager.ConnectionStrings("BushmillDb").ConnectionString
+
+            Using cn As New SqlConnection(ConnStr)
+                ' Primero verificar si existe
+                Dim cmdVerificar As New SqlCommand("SELECT id_categoria FROM Categoria WHERE nombre = @nombre", cn)
+                cmdVerificar.Parameters.AddWithValue("@nombre", nombreCategoria.Trim())
+                cn.Open()
+
+                Dim resultado = cmdVerificar.ExecuteScalar()
+                If resultado IsNot Nothing Then
+                    Return Convert.ToInt32(resultado)
+                End If
+
+                ' Si no existe, insertar nueva categoría
+                Dim cmdInsertar As New SqlCommand("INSERT INTO Categoria (nombre) OUTPUT INSERTED.id_categoria VALUES (@nombre)", cn)
+                cmdInsertar.Parameters.AddWithValue("@nombre", nombreCategoria.Trim())
+                Dim nuevoId = Convert.ToInt32(cmdInsertar.ExecuteScalar())
+
+                ' Recargar combo de categorías
+                CargarCategorias()
+                CBCategoria.Text = nombreCategoria.Trim()
+
+                Return nuevoId
+            End Using
+        Catch ex As Exception
+            MessageBox.Show("Error al gestionar categoría: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return -1
+        End Try
+    End Function
 
     ' --- VALIDACIONES INDIVIDUALES ---
     Private Function ValidarCodigoBarra() As Boolean
         Dim codigo As String = TBCodBarra.Text.Trim()
 
         If String.IsNullOrWhiteSpace(codigo) Then
-            MessageBox.Show("El código de barras es obligatorio.", "Validación",
-                          MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            MessageBox.Show("El código de barras es obligatorio.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             TBCodBarra.Focus()
             Return False
         End If
 
         If codigo.Length < 3 Then
-            MessageBox.Show("El código de barras debe tener al menos 3 dígitos.", "Validación",
-                          MessageBoxButtons.OK, MessageBoxIcon.Warning)
-            TBCodBarra.Focus()
-            TBCodBarra.SelectAll()
-            Return False
-        End If
-
-        ' Validar que sea solo numérico
-        If Not System.Text.RegularExpressions.Regex.IsMatch(codigo, "^\d+$") Then
-            MessageBox.Show("El código de barras solo puede contener números.", "Validación",
-                          MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            MessageBox.Show("El código de barras debe tener al menos 3 caracteres.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             TBCodBarra.Focus()
             TBCodBarra.SelectAll()
             Return False
@@ -191,10 +260,46 @@ Public Class FormProductos
         Return True
     End Function
 
+    ' --- NUEVA VALIDACIÓN PARA NOMBRE ---
+    Private Function ValidarNombre() As Boolean
+        Dim nombre As String = TBNombre.Text.Trim()
+
+        If String.IsNullOrWhiteSpace(nombre) Then
+            MessageBox.Show("El nombre de la bebida es obligatorio.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            TBNombre.Focus()
+            Return False
+        End If
+
+        If nombre.Length < 2 Then
+            MessageBox.Show("El nombre debe tener al menos 2 caracteres.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            TBNombre.Focus()
+            TBNombre.SelectAll()
+            Return False
+        End If
+
+        If nombre.Length > 100 Then
+            MessageBox.Show("El nombre no puede tener más de 100 caracteres.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            TBNombre.Focus()
+            TBNombre.SelectAll()
+            Return False
+        End If
+
+        ' Validar que contenga solo letras, números, espacios y caracteres especiales comunes
+        For Each c As Char In nombre
+            If Not Char.IsLetterOrDigit(c) AndAlso c <> " "c AndAlso c <> "-"c AndAlso c <> "."c AndAlso c <> ","c Then
+                MessageBox.Show("El nombre solo puede contener letras, números, espacios, guiones, puntos y comas.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                TBNombre.Focus()
+                TBNombre.SelectAll()
+                Return False
+            End If
+        Next
+
+        Return True
+    End Function
+
     Private Function ValidarCategoria() As Boolean
-        If CBCategoria.SelectedIndex = -1 Then
-            MessageBox.Show("Debe seleccionar una categoría.", "Validación",
-                          MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        If String.IsNullOrWhiteSpace(CBCategoria.Text.Trim()) Then
+            MessageBox.Show("Debe ingresar una categoría.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             CBCategoria.Focus()
             Return False
         End If
@@ -202,9 +307,8 @@ Public Class FormProductos
     End Function
 
     Private Function ValidarMarca() As Boolean
-        If CBMarca.SelectedIndex = -1 Then
-            MessageBox.Show("Debe seleccionar una marca.", "Validación",
-                          MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        If String.IsNullOrWhiteSpace(CBMarca.Text.Trim()) Then
+            MessageBox.Show("Debe ingresar una marca.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             CBMarca.Focus()
             Return False
         End If
@@ -213,20 +317,10 @@ Public Class FormProductos
 
     Private Function ValidarPrecio() As Boolean
         If NUDPrecio.Value <= 0 Then
-            MessageBox.Show("El precio debe ser mayor a 0.", "Validación",
-                          MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            MessageBox.Show("El precio debe ser mayor a 0.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             NUDPrecio.Focus()
             Return False
         End If
-
-        If NUDPrecio.Value > 100000 Then
-            MessageBox.Show("El precio no puede ser mayor a $100,000.", "Validación",
-                          MessageBoxButtons.OK, MessageBoxIcon.Warning)
-            NUDPrecio.Focus()
-            NUDPrecio.Select(0, NUDPrecio.Text.Length)
-            Return False
-        End If
-
         Return True
     End Function
 
@@ -234,42 +328,22 @@ Public Class FormProductos
         Dim volumen As String = TBVolumen.Text.Trim()
 
         If String.IsNullOrWhiteSpace(volumen) Then
-            MessageBox.Show("El volumen es obligatorio.", "Validación",
-                          MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            MessageBox.Show("El volumen es obligatorio.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             TBVolumen.Focus()
             Return False
         End If
 
-        ' Validar que sea solo numérico
-        If Not System.Text.RegularExpressions.Regex.IsMatch(volumen, "^\d+$") Then
-            MessageBox.Show("El volumen debe contener solo números enteros (cm³).", "Validación",
-                          MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        ' Validar que sea numérico (puede contener decimales)
+        Dim volumenNum As Decimal
+        If Not Decimal.TryParse(volumen, volumenNum) Then
+            MessageBox.Show("El volumen debe ser un número válido.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             TBVolumen.Focus()
             TBVolumen.SelectAll()
             Return False
         End If
 
-        ' Validar rango numérico
-        Dim volumenNum As Integer
-        If Integer.TryParse(volumen, volumenNum) Then
-            If volumenNum <= 0 Then
-                MessageBox.Show("El volumen debe ser mayor a 0 cm³.", "Validación",
-                              MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                TBVolumen.Focus()
-                TBVolumen.SelectAll()
-                Return False
-            End If
-
-            If volumenNum > 999999 Then
-                MessageBox.Show("El volumen no puede ser mayor a 999,999 cm³.", "Validación",
-                              MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                TBVolumen.Focus()
-                TBVolumen.SelectAll()
-                Return False
-            End If
-        Else
-            MessageBox.Show("El volumen debe ser un número válido.", "Validación",
-                          MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        If volumenNum <= 0 Then
+            MessageBox.Show("El volumen debe ser mayor a 0.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             TBVolumen.Focus()
             TBVolumen.SelectAll()
             Return False
@@ -282,16 +356,15 @@ Public Class FormProductos
         Dim graduacion As String = TBGraduacion.Text.Trim()
 
         If String.IsNullOrWhiteSpace(graduacion) Then
-            MessageBox.Show("La graduación alcohólica es obligatoria.", "Validación",
-                          MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            MessageBox.Show("La graduación alcohólica es obligatoria.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             TBGraduacion.Focus()
             Return False
         End If
 
-        ' Validar formato de graduación (debe contener número y %)
-        If Not graduacion.Contains("%") Then
-            MessageBox.Show("La graduación debe incluir el símbolo % (ej: 12.5%, 40% vol).", "Validación",
-                          MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        ' Validar que sea numérico (puede contener decimales)
+        Dim graduacionNum As Decimal
+        If Not Decimal.TryParse(graduacion, graduacionNum) Then
+            MessageBox.Show("La graduación debe ser un número válido.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             TBGraduacion.Focus()
             TBGraduacion.SelectAll()
             Return False
@@ -304,49 +377,20 @@ Public Class FormProductos
         Dim proveedor As String = TBProveedor.Text.Trim()
 
         If String.IsNullOrWhiteSpace(proveedor) Then
-            MessageBox.Show("El proveedor es obligatorio.", "Validación",
-                          MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            MessageBox.Show("El proveedor es obligatorio.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             TBProveedor.Focus()
             Return False
         End If
-
-        If proveedor.Length < 3 Then
-            MessageBox.Show("El nombre del proveedor debe tener al menos 3 caracteres.", "Validación",
-                          MessageBoxButtons.OK, MessageBoxIcon.Warning)
-            TBProveedor.Focus()
-            TBProveedor.SelectAll()
-            Return False
-        End If
-
-        ' Validar que solo contenga letras, números y espacios
-        For Each c As Char In proveedor
-            If Not Char.IsLetterOrDigit(c) AndAlso c <> " "c AndAlso c <> "."c Then
-                MessageBox.Show("El nombre del proveedor solo puede contener letras, números, espacios y puntos.", "Validación",
-                              MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                TBProveedor.Focus()
-                TBProveedor.SelectAll()
-                Return False
-            End If
-        Next
 
         Return True
     End Function
 
     Private Function ValidarStock() As Boolean
         If NUDStock.Value < 0 Then
-            MessageBox.Show("El stock no puede ser negativo.", "Validación",
-                          MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            MessageBox.Show("El stock no puede ser negativo.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             NUDStock.Focus()
             Return False
         End If
-
-        If NUDStock.Value > 10000 Then
-            MessageBox.Show("El stock no puede ser mayor a 10,000 unidades.", "Validación",
-                          MessageBoxButtons.OK, MessageBoxIcon.Warning)
-            NUDStock.Focus()
-            Return False
-        End If
-
         Return True
     End Function
 
@@ -356,16 +400,15 @@ Public Class FormProductos
 
         ' Verificar si ya existe (solo para agregar)
         Dim codigo As String = TBCodBarra.Text.Trim()
-        Dim encontrado = productos.Select($"codigo_barras = '{codigo.Replace("'", "''")}'")
-        If encontrado.Length > 0 Then
-            MessageBox.Show("Este código de barras ya está registrado.", "Validación",
-                          MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        If ExisteProducto(codigo) Then
+            MessageBox.Show("Este código de barras ya está registrado.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             TBCodBarra.Focus()
             TBCodBarra.SelectAll()
             Return False
         End If
 
-        Return ValidarCategoria() AndAlso
+        Return ValidarNombre() AndAlso
+               ValidarCategoria() AndAlso
                ValidarMarca() AndAlso
                ValidarPrecio() AndAlso
                ValidarVolumen() AndAlso
@@ -382,17 +425,16 @@ Public Class FormProductos
         Dim codigo As String = TBCodBarra.Text.Trim()
         If codigo <> codigoBarraOriginal Then
             ' Si cambió el código, verificar que no exista otro
-            Dim encontrado = productos.Select($"CodigoBarra = '{codigo.Replace("'", "''")}' AND CodigoBarra <> '{codigoBarraOriginal.Replace("'", "''")}'")
-            If encontrado.Length > 0 Then
-                MessageBox.Show("Este código de barras ya está registrado en otro producto.", "Validación",
-                              MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            If ExisteProducto(codigo) Then
+                MessageBox.Show("Este código de barras ya está registrado en otro producto.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 TBCodBarra.Focus()
                 TBCodBarra.SelectAll()
                 Return False
             End If
         End If
 
-        Return ValidarCategoria() AndAlso
+        Return ValidarNombre() AndAlso
+               ValidarCategoria() AndAlso
                ValidarMarca() AndAlso
                ValidarPrecio() AndAlso
                ValidarVolumen() AndAlso
@@ -401,47 +443,20 @@ Public Class FormProductos
                ValidarStock()
     End Function
 
-    ' --- VALIDACIÓN EN TIEMPO REAL ---
-    Private Sub TBCodBarra_TextChanged(sender As Object, e As EventArgs) Handles TBCodBarra.TextChanged
-        ' Limitar a caracteres numéricos
-        Dim texto As String = TBCodBarra.Text
-        If texto.Length > 0 AndAlso Not System.Text.RegularExpressions.Regex.IsMatch(texto, "^\d*$") Then
-            ' Mantener solo los caracteres numéricos
-            Dim soloNumeros As String = System.Text.RegularExpressions.Regex.Replace(texto, "[^\d]", "")
-            TBCodBarra.Text = soloNumeros
-            TBCodBarra.SelectionStart = TBCodBarra.Text.Length
-        End If
-    End Sub
+    Private Function ExisteProducto(codigoBarra As String) As Boolean
+        Try
+            Dim ConnStr As String = System.Configuration.ConfigurationManager.ConnectionStrings("BushmillDb").ConnectionString
 
-    Private Sub TBVolumen_TextChanged(sender As Object, e As EventArgs) Handles TBVolumen.TextChanged
-        ' Limitar a caracteres numéricos
-        Dim texto As String = TBVolumen.Text
-        If texto.Length > 0 AndAlso Not System.Text.RegularExpressions.Regex.IsMatch(texto, "^\d*$") Then
-            ' Mantener solo los caracteres numéricos
-            Dim soloNumeros As String = System.Text.RegularExpressions.Regex.Replace(texto, "[^\d]", "")
-            TBVolumen.Text = soloNumeros
-            TBVolumen.SelectionStart = TBVolumen.Text.Length
-        End If
-    End Sub
-
-    Private Sub TBGraduacion_TextChanged(sender As Object, e As EventArgs) Handles TBGraduacion.TextChanged
-        ' Sugerir formato de graduación
-        If TBGraduacion.Text.Trim().Length > 0 AndAlso Not TBGraduacion.Text.Contains("%") Then
-            TBGraduacion.ForeColor = Color.Red
-        Else
-            TBGraduacion.ForeColor = Color.Black
-        End If
-    End Sub
-
-    ' --- ESCANEO O INGRESO MANUAL DEL CÓDIGO ---
-    Private Sub TBCodBarra_KeyDown(sender As Object, e As KeyEventArgs) Handles TBCodBarra.KeyDown
-        If e.KeyCode = Keys.Enter Then
-            e.SuppressKeyPress = True
-            If ValidarCodigoBarra() Then
-                CBCategoria.Focus()
-            End If
-        End If
-    End Sub
+            Using cn As New SqlConnection(ConnStr)
+                Dim cmd As New SqlCommand("SELECT 1 FROM Producto WHERE codigo_barras = @codigo", cn)
+                cmd.Parameters.AddWithValue("@codigo", codigoBarra)
+                cn.Open()
+                Return cmd.ExecuteScalar() IsNot Nothing
+            End Using
+        Catch ex As Exception
+            Return False
+        End Try
+    End Function
 
     ' --- BOTÓN AGREGAR ---
     Private Sub BAgregar_Click(sender As Object, e As EventArgs) Handles BAgregar.Click
@@ -450,24 +465,36 @@ Public Class FormProductos
         End If
 
         Try
-            AbrirConexion()
-            Dim query As String = "INSERT INTO Producto (codigo_barras, id_categoria, id_marca, precio, volumen, graduacion, proveedor, stock, estado)
-                           VALUES (@codigo, @categoria, @marca, @precio, @volumen, @graduacion, @proveedor, @stock, 'Activo')"
-            Dim cmd As New SqlCommand(query, Conex)
-            cmd.Parameters.AddWithValue("@codigo", TBCodBarra.Text.Trim())
-            cmd.Parameters.AddWithValue("@categoria", CBCategoria.Text)
-            cmd.Parameters.AddWithValue("@marca", CBMarca.Text)
-            cmd.Parameters.AddWithValue("@precio", NUDPrecio.Value)
-            cmd.Parameters.AddWithValue("@volumen", TBVolumen.Text.Trim() & " cm³")
-            cmd.Parameters.AddWithValue("@graduacion", TBGraduacion.Text.Trim())
-            cmd.Parameters.AddWithValue("@proveedor", TBProveedor.Text.Trim())
-            cmd.Parameters.AddWithValue("@stock", CInt(NUDStock.Value))
+            ' Obtener o crear marca y categoría
+            Dim idMarca As Integer = ObtenerOInsertarMarca(CBMarca.Text.Trim())
+            Dim idCategoria As Integer = ObtenerOInsertarCategoria(CBCategoria.Text.Trim())
 
-            cmd.ExecuteNonQuery()
-            CerrarConexion()
+            If idMarca = -1 OrElse idCategoria = -1 Then
+                MessageBox.Show("Error al gestionar marca o categoría.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Exit Sub
+            End If
+
+            Dim ConnStr As String = System.Configuration.ConfigurationManager.ConnectionStrings("BushmillDb").ConnectionString
+
+            Using cn As New SqlConnection(ConnStr)
+                Dim query As String = "INSERT INTO Producto (codigo_barras, nombre, id_categoria, id_marca, precio, volumen, graduacion, proveedor, stock, estado) " &
+                                      "VALUES (@codigo, @nombre, @id_categoria, @id_marca, @precio, @volumen, @graduacion, @proveedor, @stock, 'A')"
+                Dim cmd As New SqlCommand(query, cn)
+                cmd.Parameters.AddWithValue("@codigo", TBCodBarra.Text.Trim())
+                cmd.Parameters.AddWithValue("@nombre", TBNombre.Text.Trim()) ' Nuevo parámetro
+                cmd.Parameters.AddWithValue("@id_categoria", idCategoria)
+                cmd.Parameters.AddWithValue("@id_marca", idMarca)
+                cmd.Parameters.AddWithValue("@precio", NUDPrecio.Value)
+                cmd.Parameters.AddWithValue("@volumen", Convert.ToDecimal(TBVolumen.Text.Trim()))
+                cmd.Parameters.AddWithValue("@graduacion", Convert.ToDecimal(TBGraduacion.Text.Trim()))
+                cmd.Parameters.AddWithValue("@proveedor", TBProveedor.Text.Trim())
+                cmd.Parameters.AddWithValue("@stock", CInt(NUDStock.Value))
+
+                cn.Open()
+                cmd.ExecuteNonQuery()
+            End Using
 
             MessageBox.Show("Producto agregado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information)
-
             CargarProductosDesdeBD()
             LimpiarCampos()
 
@@ -479,8 +506,7 @@ Public Class FormProductos
     ' --- BOTÓN EDITAR ---
     Private Sub BEditar_Click(sender As Object, e As EventArgs) Handles BEditar.Click
         If DGVProductos.SelectedRows.Count = 0 Then
-            MessageBox.Show("Seleccione un producto para editar.", "Atención",
-                          MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            MessageBox.Show("Seleccione un producto para editar.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
@@ -489,23 +515,37 @@ Public Class FormProductos
         End If
 
         Try
-            AbrirConexion()
-            Dim query As String = "UPDATE Producto SET categoria=@categoria, marca=@marca, precio=@precio, volumen=@volumen,
-                           graduacion=@graduacion, proveedor=@proveedor, stock=@stock WHERE codigo_barra=@codigo"
-            Dim cmd As New SqlCommand(query, Conex)
-            cmd.Parameters.AddWithValue("@codigo", TBCodBarra.Text.Trim())
-            cmd.Parameters.AddWithValue("@categoria", CBCategoria.Text)
-            cmd.Parameters.AddWithValue("@marca", CBMarca.Text)
-            cmd.Parameters.AddWithValue("@precio", NUDPrecio.Value)
-            cmd.Parameters.AddWithValue("@volumen", TBVolumen.Text.Trim() & " cm³")
-            cmd.Parameters.AddWithValue("@graduacion", TBGraduacion.Text.Trim())
-            cmd.Parameters.AddWithValue("@proveedor", TBProveedor.Text.Trim())
-            cmd.Parameters.AddWithValue("@stock", CInt(NUDStock.Value))
-            cmd.ExecuteNonQuery()
-            CerrarConexion()
+            ' Obtener o crear marca y categoría
+            Dim idMarca As Integer = ObtenerOInsertarMarca(CBMarca.Text.Trim())
+            Dim idCategoria As Integer = ObtenerOInsertarCategoria(CBCategoria.Text.Trim())
+
+            If idMarca = -1 OrElse idCategoria = -1 Then
+                MessageBox.Show("Error al gestionar marca o categoría.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Exit Sub
+            End If
+
+            Dim ConnStr As String = System.Configuration.ConfigurationManager.ConnectionStrings("BushmillDb").ConnectionString
+
+            Using cn As New SqlConnection(ConnStr)
+                Dim query As String = "UPDATE Producto SET nombre=@nombre, id_categoria=@id_categoria, id_marca=@id_marca, precio=@precio, " &
+                                      "volumen=@volumen, graduacion=@graduacion, proveedor=@proveedor, stock=@stock " &
+                                      "WHERE codigo_barras=@codigo"
+                Dim cmd As New SqlCommand(query, cn)
+                cmd.Parameters.AddWithValue("@codigo", TBCodBarra.Text.Trim())
+                cmd.Parameters.AddWithValue("@nombre", TBNombre.Text.Trim()) ' Nuevo parámetro
+                cmd.Parameters.AddWithValue("@id_categoria", idCategoria)
+                cmd.Parameters.AddWithValue("@id_marca", idMarca)
+                cmd.Parameters.AddWithValue("@precio", NUDPrecio.Value)
+                cmd.Parameters.AddWithValue("@volumen", Convert.ToDecimal(TBVolumen.Text.Trim()))
+                cmd.Parameters.AddWithValue("@graduacion", Convert.ToDecimal(TBGraduacion.Text.Trim()))
+                cmd.Parameters.AddWithValue("@proveedor", TBProveedor.Text.Trim())
+                cmd.Parameters.AddWithValue("@stock", CInt(NUDStock.Value))
+
+                cn.Open()
+                cmd.ExecuteNonQuery()
+            End Using
 
             MessageBox.Show("Producto actualizado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information)
-
             CargarProductosDesdeBD()
             LimpiarCampos()
 
@@ -517,28 +557,29 @@ Public Class FormProductos
     ' --- BOTÓN SUSPENDER/REACTIVAR ---
     Private Sub BSuspender_Click(sender As Object, e As EventArgs) Handles BSuspender.Click
         If DGVProductos.SelectedRows.Count = 0 Then
-            MessageBox.Show("Seleccione un producto primero.", "Atención",
-                          MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            MessageBox.Show("Seleccione un producto primero.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
         Try
             Dim row As DataGridViewRow = DGVProductos.SelectedRows(0)
-            Dim codigo As String = row.Cells("codigo_barra").Value.ToString()
+            Dim codigo As String = row.Cells("codigo_barras").Value.ToString()
             Dim estadoActual As String = row.Cells("estado").Value.ToString()
 
-            Dim nuevoEstado As String = If(estadoActual = "Activo", "Inactivo", "Activo")
+            Dim nuevoEstado As String = If(estadoActual = "A", "I", "A")
 
-            AbrirConexion()
-            Dim query As String = "UPDATE Producto SET estado=@estado WHERE codigo_barra=@codigo"
-            Dim cmd As New SqlCommand(query, Conex)
-            cmd.Parameters.AddWithValue("@estado", nuevoEstado)
-            cmd.Parameters.AddWithValue("@codigo", codigo)
-            cmd.ExecuteNonQuery()
-            CerrarConexion()
+            Dim ConnStr As String = System.Configuration.ConfigurationManager.ConnectionStrings("BushmillDb").ConnectionString
 
-            MessageBox.Show($"El producto fue actualizado a '{nuevoEstado}'.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Using cn As New SqlConnection(ConnStr)
+                Dim query As String = "UPDATE Producto SET estado=@estado WHERE codigo_barras=@codigo"
+                Dim cmd As New SqlCommand(query, cn)
+                cmd.Parameters.AddWithValue("@estado", nuevoEstado)
+                cmd.Parameters.AddWithValue("@codigo", codigo)
+                cn.Open()
+                cmd.ExecuteNonQuery()
+            End Using
 
+            MessageBox.Show($"El producto fue actualizado a '{If(nuevoEstado = "A", "Activo", "Inactivo")}'.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
             CargarProductosDesdeBD()
 
         Catch ex As Exception
@@ -553,32 +594,24 @@ Public Class FormProductos
                 Dim row As DataGridViewRow = DGVProductos.Rows(e.RowIndex)
 
                 ' Guardar el código original para edición
-                codigoBarraOriginal = row.Cells("CodigoBarra").Value.ToString()
+                codigoBarraOriginal = row.Cells("codigo_barras").Value.ToString()
 
                 TBCodBarra.Text = codigoBarraOriginal
-                CBCategoria.Text = row.Cells("Categoria").Value.ToString()
-                CBMarca.Text = row.Cells("Marca").Value.ToString()
-                NUDPrecio.Value = Convert.ToDecimal(row.Cells("Precio").Value)
-
-                ' Quitar " cm³" del volumen al cargar para edición
-                Dim volumenTexto As String = row.Cells("Volumen").Value.ToString()
-                If volumenTexto.EndsWith(" cm³") Then
-                    TBVolumen.Text = volumenTexto.Replace(" cm³", "")
-                Else
-                    TBVolumen.Text = volumenTexto
-                End If
-
-                TBGraduacion.Text = row.Cells("Graduacion").Value.ToString()
-                TBProveedor.Text = row.Cells("Proveedor").Value.ToString()
-                NUDStock.Value = Convert.ToDecimal(row.Cells("Stock").Value)
+                TBNombre.Text = row.Cells("nombre").Value.ToString() ' Nuevo campo
+                CBCategoria.Text = row.Cells("categoria").Value.ToString()
+                CBMarca.Text = row.Cells("marca").Value.ToString()
+                NUDPrecio.Value = Convert.ToDecimal(row.Cells("precio").Value)
+                TBVolumen.Text = row.Cells("volumen").Value.ToString()
+                TBGraduacion.Text = row.Cells("graduacion").Value.ToString()
+                TBProveedor.Text = row.Cells("proveedor").Value.ToString()
+                NUDStock.Value = Convert.ToDecimal(row.Cells("stock").Value)
 
                 ' Actualizar texto del botón según estado
-                Dim estadoActual As String = row.Cells("Estado").Value.ToString()
+                Dim estadoActual As String = row.Cells("estado").Value.ToString()
                 ActualizarBotonSuspender(estadoActual)
 
             Catch ex As Exception
-                MessageBox.Show($"Error al cargar datos del producto: {ex.Message}", "Error",
-                              MessageBoxButtons.OK, MessageBoxIcon.Error)
+                MessageBox.Show($"Error al cargar datos del producto: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         End If
     End Sub
@@ -589,8 +622,8 @@ Public Class FormProductos
             Dim row As DataGridViewRow = DGVProductos.Rows(e.RowIndex)
 
             ' Formato por estado
-            If DGVProductos.Columns(e.ColumnIndex).Name = "Estado" Then
-                If e.Value.ToString() = "Inactivo" Then
+            If DGVProductos.Columns(e.ColumnIndex).Name = "estado" Then
+                If e.Value.ToString() = "I" Then
                     row.DefaultCellStyle.ForeColor = Color.Gray
                     row.DefaultCellStyle.BackColor = Color.LightYellow
                 Else
@@ -600,7 +633,7 @@ Public Class FormProductos
             End If
 
             ' Formato por stock bajo
-            If DGVProductos.Columns(e.ColumnIndex).Name = "Stock" Then
+            If DGVProductos.Columns(e.ColumnIndex).Name = "stock" Then
                 Dim stock As Integer
                 If Integer.TryParse(e.Value.ToString(), stock) Then
                     If stock = 0 Then
@@ -618,6 +651,7 @@ Public Class FormProductos
     ' --- LIMPIAR CAMPOS ---
     Private Sub LimpiarCampos()
         TBCodBarra.Clear()
+        TBNombre.Clear() ' Nuevo campo
         CBCategoria.SelectedIndex = -1
         CBMarca.SelectedIndex = -1
         NUDPrecio.Value = 0
@@ -630,7 +664,7 @@ Public Class FormProductos
     End Sub
 
     Private Sub ActualizarBotonSuspender(estado As String)
-        If estado = "Activo" Then
+        If estado = "A" Then
             BSuspender.Text = "Suspender"
             BSuspender.BackColor = Color.Red
             BSuspender.ForeColor = Color.White
@@ -641,11 +675,49 @@ Public Class FormProductos
         End If
     End Sub
 
+    ' --- EVENTOS DE COMBOBOX ---
     Private Sub CBMarca_SelectedIndexChanged(sender As Object, e As EventArgs) Handles CBMarca.SelectedIndexChanged
-
+        ' Manejar cuando el usuario selecciona una marca existente
     End Sub
 
     Private Sub CBCategoria_SelectedIndexChanged(sender As Object, e As EventArgs) Handles CBCategoria.SelectedIndexChanged
+        ' Manejar cuando el usuario selecciona una categoría existente
+    End Sub
 
+    ' --- VALIDACIÓN EN TIEMPO REAL PARA NOMBRE ---
+    Private Sub TBNombre_TextChanged(sender As Object, e As EventArgs) Handles TBNombre.TextChanged
+        ' Validar longitud en tiempo real
+        If TBNombre.Text.Length > 100 Then
+            TBNombre.Text = TBNombre.Text.Substring(0, 100)
+            TBNombre.SelectionStart = TBNombre.Text.Length
+            MessageBox.Show("El nombre no puede tener más de 100 caracteres.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        End If
+    End Sub
+
+    ' --- VALIDACIÓN EN TIEMPO REAL ---
+    Private Sub TBCodBarra_TextChanged(sender As Object, e As EventArgs) Handles TBCodBarra.TextChanged
+        ' Permitir cualquier carácter para código de barras
+    End Sub
+
+    Private Sub TBVolumen_TextChanged(sender As Object, e As EventArgs) Handles TBVolumen.TextChanged
+        ' Permitir números y punto decimal
+        Dim texto As String = TBVolumen.Text
+        If texto.Length > 0 AndAlso Not System.Text.RegularExpressions.Regex.IsMatch(texto, "^[\d\.]*$") Then
+            ' Mantener solo números y punto
+            Dim soloNumeros As String = System.Text.RegularExpressions.Regex.Replace(texto, "[^\d\.]", "")
+            TBVolumen.Text = soloNumeros
+            TBVolumen.SelectionStart = TBVolumen.Text.Length
+        End If
+    End Sub
+
+    Private Sub TBGraduacion_TextChanged(sender As Object, e As EventArgs) Handles TBGraduacion.TextChanged
+        ' Permitir números y punto decimal
+        Dim texto As String = TBGraduacion.Text
+        If texto.Length > 0 AndAlso Not System.Text.RegularExpressions.Regex.IsMatch(texto, "^[\d\.]*$") Then
+            ' Mantener solo números y punto
+            Dim soloNumeros As String = System.Text.RegularExpressions.Regex.Replace(texto, "[^\d\.]", "")
+            TBGraduacion.Text = soloNumeros
+            TBGraduacion.SelectionStart = TBGraduacion.Text.Length
+        End If
     End Sub
 End Class
