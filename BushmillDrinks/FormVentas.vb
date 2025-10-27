@@ -24,11 +24,23 @@
         DGVDetalleVenta.SelectionMode = DataGridViewSelectionMode.FullRowSelect
         DGVDetalleVenta.MultiSelect = False
 
+        ' Configurar validación de entrada
+        ConfigureInputValidation()
+
         ' Total inicial: solo el importe (la label "Total:" déjala fija aparte)
         LTotal.Text = totalVenta.ToString("C2")
 
         ' Foco
         TBDNICliente.Focus()
+    End Sub
+
+    Private Sub ConfigureInputValidation()
+        ' Validación para código de barras
+        AddHandler TBCodBarra.KeyPress, AddressOf TBCodBarra_KeyPress
+        AddHandler TBCodBarra.TextChanged, AddressOf TBCodBarra_TextChanged
+
+        ' Validación para cantidad
+        AddHandler NUDCantidad.ValueChanged, AddressOf NUDCantidad_ValueChanged
     End Sub
 
     Private Sub PrepararTabla()
@@ -58,7 +70,7 @@
 
     Private Sub LimpiarCamposProducto(Optional limpiarSeleccion As Boolean = True)
         TBCodBarra.Clear()
-        NUDCantidad.Value = 0
+        NUDCantidad.Value = 1
         If limpiarSeleccion Then
             selectedRowIndex = -1
             BAgregarProducto.Text = "Agregar Producto"
@@ -153,7 +165,39 @@
     ' ===========================================
     ' ======== VALIDACIONES DE PRODUCTOS =========
     ' ===========================================
+
+    ' --- VALIDACIÓN EN TIEMPO REAL PARA CÓDIGO DE BARRAS ---
+    Private Sub TBCodBarra_KeyPress(sender As Object, e As KeyPressEventArgs)
+        If Not Char.IsControl(e.KeyChar) AndAlso Not Char.IsDigit(e.KeyChar) Then
+            e.Handled = True
+            MessageBox.Show("Solo se permiten números en el código de barras.", "Validación",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        End If
+    End Sub
+
+    Private Sub TBCodBarra_TextChanged(sender As Object, e As EventArgs)
+        ' Limitar longitud del código de barras (ejemplo: 13 dígitos EAN-13)
+        If TBCodBarra.Text.Length > 13 Then
+            TBCodBarra.Text = TBCodBarra.Text.Substring(0, 13)
+            TBCodBarra.SelectionStart = TBCodBarra.Text.Length
+            MessageBox.Show("El código de barras no puede tener más de 13 dígitos.", "Validación",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        End If
+    End Sub
+
+    ' --- VALIDACIÓN DE CANTIDAD MÁXIMA ---
+    Private Sub NUDCantidad_ValueChanged(sender As Object, e As EventArgs)
+        ' Establecer un límite máximo razonable para la cantidad
+        If NUDCantidad.Value > 1000 Then
+            NUDCantidad.Value = 1000
+            MessageBox.Show("La cantidad no puede ser mayor a 1000 unidades.", "Validación",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        End If
+    End Sub
+
+    ' --- VALIDACIÓN COMPLETA DE PRODUCTO ---
     Private Function ValidarProducto() As Boolean
+        ' Validar código de barras
         If String.IsNullOrWhiteSpace(TBCodBarra.Text) Then
             MessageBox.Show("Ingrese el código de barra.", "Validación",
                             MessageBoxButtons.OK, MessageBoxIcon.Warning)
@@ -161,10 +205,166 @@
             Return False
         End If
 
-        If NUDCantidad.Value < 0 Then
-            MessageBox.Show("La cantidad no puede ser negativa.", "Validación",
+        ' Validar longitud mínima del código de barras
+        If TBCodBarra.Text.Trim().Length < 3 Then
+            MessageBox.Show("El código de barras debe tener al menos 3 caracteres.", "Validación",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            TBCodBarra.Focus()
+            TBCodBarra.SelectAll()
+            Return False
+        End If
+
+        ' Validar que el código de barras contenga solo números
+        If Not TBCodBarra.Text.Trim().All(Function(c) Char.IsDigit(c)) Then
+            MessageBox.Show("El código de barras solo puede contener números.", "Validación",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            TBCodBarra.Focus()
+            TBCodBarra.SelectAll()
+            Return False
+        End If
+
+        ' Validar cantidad
+        If NUDCantidad.Value <= 0 Then
+            MessageBox.Show("La cantidad debe ser mayor a cero.", "Validación",
                             MessageBoxButtons.OK, MessageBoxIcon.Warning)
             NUDCantidad.Focus()
+            NUDCantidad.Select(0, NUDCantidad.Value.ToString().Length)
+            Return False
+        End If
+
+        ' Validar producto existente
+        If Not ValidarProductoExistente(TBCodBarra.Text.Trim()) Then
+            TBCodBarra.Focus()
+            TBCodBarra.SelectAll()
+            Return False
+        End If
+
+        ' Validar stock disponible
+        If Not ValidarStockDisponible(TBCodBarra.Text.Trim(), Convert.ToInt32(NUDCantidad.Value)) Then
+            MessageBox.Show("Stock insuficiente para este producto.", "Validación",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            NUDCantidad.Focus()
+            NUDCantidad.Select(0, NUDCantidad.Value.ToString().Length)
+            Return False
+        End If
+
+        Return True
+    End Function
+
+    ' --- VALIDACIÓN DE PRODUCTO EXISTENTE ---
+    Private Function ValidarProductoExistente(codigoBarra As String) As Boolean
+        ' Simulación - luego esto vendrá de tu base de datos
+        Dim productosExistentes As New List(Of String) From {"1234567890123", "123", "456", "789", "111", "222"}
+
+        If Not productosExistentes.Contains(codigoBarra) Then
+            MessageBox.Show("El código de barras no corresponde a un producto existente.", "Validación",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return False
+        End If
+
+        Return True
+    End Function
+
+    ' --- VALIDACIÓN DE STOCK DISPONIBLE ---
+    Private Function ValidarStockDisponible(codigoBarra As String, cantidadSolicitada As Integer) As Boolean
+        ' Simulación de validación de stock - luego vendrá de BD
+        Dim stockDisponible As Integer = 0
+
+        Select Case codigoBarra
+            Case "1234567890123", "123"
+                stockDisponible = 50
+            Case "456"
+                stockDisponible = 25
+            Case "789"
+                stockDisponible = 100
+            Case "111"
+                stockDisponible = 10
+            Case "222"
+                stockDisponible = 5
+            Case Else
+                stockDisponible = 0
+        End Select
+
+        If cantidadSolicitada > stockDisponible Then
+            MessageBox.Show($"Stock insuficiente. Disponible: {stockDisponible} unidades", "Validación",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return False
+        End If
+
+        Return True
+    End Function
+
+    ' --- VALIDACIÓN DE STOCK FINAL ---
+    Private Function ValidarStockFinal() As Boolean
+        For Each row As DataRow In detalle.Rows
+            If row.RowState <> DataRowState.Deleted Then
+                Dim codigoBarra As String = row("CodigoBarra").ToString()
+                Dim cantidad As Integer = Convert.ToInt32(row("Cantidad"))
+
+                If Not ValidarStockDisponible(codigoBarra, cantidad) Then
+                    MessageBox.Show($"Stock insuficiente para el producto: {row("Producto")}", "Validación",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    Return False
+                End If
+            End If
+        Next
+        Return True
+    End Function
+
+    ' --- VALIDACIÓN DE PRECIO EN SIMULACIÓN ---
+    Private Function ObtenerPrecioProducto(codigoBarra As String) As Decimal
+        ' Simulación de precios - luego vendrá de BD
+        Dim precios As New Dictionary(Of String, Decimal) From {
+            {"1234567890123", 120D},
+            {"123", 150D},
+            {"456", 200D},
+            {"789", 75.5D},
+            {"111", 300D},
+            {"222", 89.9D}
+        }
+
+        If precios.ContainsKey(codigoBarra) Then
+            Return precios(codigoBarra)
+        Else
+            MessageBox.Show("No se pudo obtener el precio para este producto.", "Error",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return 0D
+        End If
+    End Function
+
+    ' --- VALIDACIÓN COMPLETA ANTES DE CONFIRMAR VENTA ---
+    Private Function ValidarVentaCompleta() As Boolean
+        ' 1. Validar cliente
+        If Not ValidarYResolverCliente() Then
+            Return False
+        End If
+
+        ' 2. Validar que haya al menos un producto
+        If detalle.Rows.Count = 0 Then
+            MessageBox.Show("Agregue al menos un producto a la venta.", "Validación",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            TBCodBarra.Focus()
+            Return False
+        End If
+
+        ' 3. Validar que ningún producto tenga cantidad cero
+        For Each row As DataRow In detalle.Rows
+            If row.RowState <> DataRowState.Deleted AndAlso Convert.ToInt32(row("Cantidad")) <= 0 Then
+                MessageBox.Show("Todos los productos deben tener cantidad mayor a cero.", "Validación",
+                                MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                Return False
+            End If
+        Next
+
+        ' 4. Validar que el total sea mayor a cero
+        If totalVenta <= 0 Then
+            MessageBox.Show("El total de la venta debe ser mayor a cero.", "Validación",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return False
+        End If
+
+        ' 5. Validar stock final antes de confirmar
+        If Not ValidarStockFinal() Then
             Return False
         End If
 
@@ -190,11 +390,36 @@
     Private Sub BAgregarProducto_Click(sender As Object, e As EventArgs) Handles BAgregarProducto.Click
         If Not ValidarProducto() Then Exit Sub
 
-        ' Simulación de búsqueda de producto (luego vendrá de BD)
-        Dim producto As String = "Cerveza"
-        Dim marca As String = "Quilmes"
-        Dim tipo As String = "Lager"
-        Dim precio As Decimal = 120D
+        ' Obtener datos del producto (simulación - luego vendrá de BD)
+        Dim producto As String = ""
+        Dim marca As String = ""
+        Dim tipo As String = ""
+
+        Select Case TBCodBarra.Text.Trim()
+            Case "1234567890123", "123"
+                producto = "Cerveza"
+                marca = "Quilmes"
+                tipo = "Lager"
+            Case "456"
+                producto = "Vino"
+                marca = "Trapiche"
+                tipo = "Malbec"
+            Case "789"
+                producto = "Gaseosa"
+                marca = "Coca-Cola"
+                tipo = "Cola"
+            Case "111"
+                producto = "Whisky"
+                marca = "Johnnie Walker"
+                tipo = "Red Label"
+            Case "222"
+                producto = "Agua Mineral"
+                marca = "Villavicencio"
+                tipo = "Sin Gas"
+        End Select
+
+        Dim precio As Decimal = ObtenerPrecioProducto(TBCodBarra.Text.Trim())
+        If precio <= 0 Then Exit Sub
 
         Dim cod As String = TBCodBarra.Text.Trim()
         Dim cant As Integer = Convert.ToInt32(NUDCantidad.Value)
@@ -210,6 +435,11 @@
                 RecalcularTotal()
                 Return
             Else
+                ' Validar stock para la actualización
+                If Not ValidarStockDisponible(cod, cant) Then
+                    Exit Sub
+                End If
+
                 ' Actualizar cantidad y subtotal
                 r("Cantidad") = cant
                 r("Subtotal") = cant * Convert.ToDecimal(r("PrecioUnitario"))
@@ -225,6 +455,12 @@
             ' Acumular cantidad
             Dim r As DataRow = detalle.Rows(idxExistente)
             Dim nuevaCant As Integer = Convert.ToInt32(r("Cantidad")) + cant
+
+            ' Validar stock para la acumulación
+            If Not ValidarStockDisponible(cod, nuevaCant) Then
+                Exit Sub
+            End If
+
             r("Cantidad") = nuevaCant
             r("Subtotal") = nuevaCant * Convert.ToDecimal(r("PrecioUnitario"))
         Else
@@ -241,30 +477,48 @@
     ' ============ CONFIRMAR VENTA ==============
     ' ===========================================
     Private Sub BConfirmarVenta_Click(sender As Object, e As EventArgs) Handles BConfirmarVenta.Click
-        If Not ValidarYResolverCliente() Then Exit Sub
+        ' Usar validación completa en lugar de solo validar cliente
+        If Not ValidarVentaCompleta() Then Exit Sub
 
-        If detalle.Rows.Count = 0 Then
-            MessageBox.Show("Agregue al menos un producto.", "Validación",
-                            MessageBoxButtons.OK, MessageBoxIcon.Warning)
-            TBCodBarra.Focus()
-            Exit Sub
+        ' Confirmación final antes de procesar
+        Dim confirmacion As DialogResult = MessageBox.Show(
+            $"¿Confirmar venta por un total de {totalVenta.ToString("C2")}?" & vbCrLf &
+            $"Cliente: {LNombreClienteConf.Text}" & vbCrLf &
+            $"Productos: {detalle.Rows.Count}",
+            "Confirmar Venta",
+            MessageBoxButtons.YesNo,
+            MessageBoxIcon.Question)
+
+        If confirmacion <> DialogResult.Yes Then
+            Return
         End If
 
         ' Aquí iría el guardado real (try/catch + persistencia)
-        MessageBox.Show("Venta registrada correctamente.", "Éxito",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information)
+        Try
+            ' Simulación de guardado
+            MessageBox.Show("Venta registrada correctamente.", "Éxito",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information)
 
-        ' Reset para nueva venta
-        ResetearVenta()
+            ' Reset para nueva venta
+            ResetearVenta()
+
+        Catch ex As Exception
+            MessageBox.Show($"Error al registrar la venta: {ex.Message}", "Error",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
     End Sub
 
     ' ===========================================
     ' ============== CANCELAR ===================
     ' ===========================================
     Private Sub BCancelarVenta_Click(sender As Object, e As EventArgs) Handles BCancelar.Click
-        Dim resp = MessageBox.Show("¿Está seguro que desea cancelar la venta?",
-                                   "Cancelar Venta", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
-        If resp = DialogResult.Yes Then
+        If detalle.Rows.Count > 0 Then
+            Dim resp = MessageBox.Show("¿Está seguro que desea cancelar la venta? Se perderán todos los productos agregados.",
+                                       "Cancelar Venta", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
+            If resp = DialogResult.Yes Then
+                ResetearVenta()
+            End If
+        Else
             ResetearVenta()
         End If
     End Sub
@@ -276,6 +530,7 @@
         TBDNICliente.Clear()
         LNombreClienteConf.Text = ""
         LimpiarCamposProducto()
+        TBDNICliente.Focus()
     End Sub
 
     ' ===========================================
@@ -295,6 +550,23 @@
                 LNombreClienteConf.Text = c("Nombre").ToString()
             End If
         End Using
+    End Sub
+
+    ' ===========================================
+    ' ======== VALIDACIÓN AL CERRAR =============
+    ' ===========================================
+    Private Sub FormVentas_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+        If detalle.Rows.Count > 0 AndAlso totalVenta > 0 Then
+            Dim respuesta As DialogResult = MessageBox.Show(
+                "Tiene una venta en proceso. ¿Está seguro que desea salir?",
+                "Venta en Proceso",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning)
+
+            If respuesta = DialogResult.No Then
+                e.Cancel = True
+            End If
+        End If
     End Sub
 
 End Class

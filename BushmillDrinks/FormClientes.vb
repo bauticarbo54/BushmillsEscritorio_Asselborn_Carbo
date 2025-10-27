@@ -4,6 +4,7 @@
 
     Public Property ClienteAgregado As DataRow
     Public Property CerrarAlAgregar As Boolean = False
+
     Public Sub Prefill(dni As String, Optional nombre As String = "", Optional telefono As String = "")
         If Not String.IsNullOrWhiteSpace(dni) Then TBDNI.Text = dni
         If Not String.IsNullOrWhiteSpace(nombre) Then TBNombre.Text = nombre
@@ -34,7 +35,6 @@
         BSuspender.TabIndex = 5
         DGVClientes.TabIndex = 6
 
-
         ' Crear la tabla solo si aún no existe
         If clientes Is Nothing Then
             PrepararTabla()
@@ -42,7 +42,6 @@
         End If
 
         DGVClientes.DataSource = clientes
-
 
         ' Ajustes DataGridView
         DGVClientes.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
@@ -57,6 +56,12 @@
     Private Sub ConfigureInputValidation()
         ' Permitir solo números en DNI
         AddHandler TBDNI.KeyPress, AddressOf TBDNI_KeyPress
+
+        ' Permitir solo letras y espacios en Nombre
+        AddHandler TBNombre.KeyPress, AddressOf TBNombre_KeyPress
+
+        ' Permitir solo números en Teléfono
+        AddHandler TBTelefono.KeyPress, AddressOf TBTelefono_KeyPress
     End Sub
 
     ' --- VALIDACIÓN DE ENTRADA PARA DNI (SOLO NÚMEROS) ---
@@ -64,6 +69,24 @@
         If Not Char.IsControl(e.KeyChar) AndAlso Not Char.IsDigit(e.KeyChar) Then
             e.Handled = True
             MessageBox.Show("Solo se permiten números en el campo DNI.", "Validación",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        End If
+    End Sub
+
+    ' --- VALIDACIÓN PARA NOMBRE (SOLO LETRAS Y ESPACIOS) ---
+    Private Sub TBNombre_KeyPress(sender As Object, e As KeyPressEventArgs)
+        If Not Char.IsControl(e.KeyChar) AndAlso Not Char.IsLetter(e.KeyChar) AndAlso e.KeyChar <> " "c Then
+            e.Handled = True
+            MessageBox.Show("Solo se permiten letras y espacios en el campo Nombre.", "Validación",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        End If
+    End Sub
+
+    ' --- VALIDACIÓN PARA TELÉFONO (SOLO NÚMEROS) ---
+    Private Sub TBTelefono_KeyPress(sender As Object, e As KeyPressEventArgs)
+        If Not Char.IsControl(e.KeyChar) AndAlso Not Char.IsDigit(e.KeyChar) Then
+            e.Handled = True
+            MessageBox.Show("Solo se permiten números en el campo Teléfono.", "Validación",
                             MessageBoxButtons.OK, MessageBoxIcon.Warning)
         End If
     End Sub
@@ -118,9 +141,34 @@
             Return False
         End If
 
-        ' Validar formato del teléfono (opcional, mínimo 8 dígitos)
-        If TBTelefono.Text.Length < 8 Then
-            MessageBox.Show("El teléfono debe tener al menos 8 dígitos.", "Error",
+        ' Validar formato del nombre
+        If TBNombre.Text.Trim().Length < 5 Then
+            MessageBox.Show("El nombre debe tener al menos 5 caracteres.", "Error",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TBNombre.Focus()
+            TBNombre.SelectAll()
+            Return False
+        End If
+
+        If Not TBNombre.Text.Trim().Contains(" ") Then
+            MessageBox.Show("Por favor ingrese nombre y apellido.", "Error",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TBNombre.Focus()
+            TBNombre.SelectAll()
+            Return False
+        End If
+
+        If TBNombre.Text.Contains("  ") Then
+            MessageBox.Show("El nombre no puede tener espacios consecutivos.", "Error",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error)
+            TBNombre.Focus()
+            TBNombre.SelectAll()
+            Return False
+        End If
+
+        ' Validar formato del teléfono
+        If TBTelefono.Text.Length < 8 OrElse TBTelefono.Text.Length > 15 Then
+            MessageBox.Show("El teléfono debe tener entre 8 y 15 dígitos.", "Error",
                             MessageBoxButtons.OK, MessageBoxIcon.Error)
             TBTelefono.Focus()
             TBTelefono.SelectAll()
@@ -159,7 +207,7 @@
 
         Dim nuevaFila = clientes.NewRow()
         nuevaFila("DNI") = TBDNI.Text
-        nuevaFila("Nombre") = TBNombre.Text
+        nuevaFila("Nombre") = TBNombre.Text.Trim()
         nuevaFila("Telefono") = TBTelefono.Text
         nuevaFila("Estado") = "Activo"
         clientes.Rows.Add(nuevaFila)
@@ -219,7 +267,7 @@
         End If
 
         row.Cells("DNI").Value = TBDNI.Text
-        row.Cells("Nombre").Value = TBNombre.Text
+        row.Cells("Nombre").Value = TBNombre.Text.Trim()
         row.Cells("Telefono").Value = TBTelefono.Text
 
         MessageBox.Show("Cliente actualizado correctamente.", "Éxito",
@@ -302,6 +350,17 @@
         End If
     End Sub
 
+    ' --- VALIDACIÓN EN TIEMPO REAL PARA NOMBRE ---
+    Private Sub TBNombre_TextChanged(sender As Object, e As EventArgs) Handles TBNombre.TextChanged
+        ' Limitar a 50 caracteres máximo para nombre
+        If TBNombre.Text.Length > 50 Then
+            TBNombre.Text = TBNombre.Text.Substring(0, 50)
+            TBNombre.SelectionStart = TBNombre.Text.Length
+            MessageBox.Show("El nombre no puede tener más de 50 caracteres.", "Validación",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        End If
+    End Sub
+
     ' --- VALIDACIÓN EN TIEMPO REAL PARA TELÉFONO ---
     Private Sub TBTelefono_TextChanged(sender As Object, e As EventArgs) Handles TBTelefono.TextChanged
         ' Limitar a 15 caracteres máximo para teléfono
@@ -311,13 +370,49 @@
         End If
     End Sub
 
-    ' --- VALIDACIÓN AL PERDER EL FOCO ---
+    ' --- VALIDACIÓN AL PERDER EL FOCO PARA DNI ---
     Private Sub TBDNI_Leave(sender As Object, e As EventArgs) Handles TBDNI.Leave
         If Not String.IsNullOrWhiteSpace(TBDNI.Text) Then
             If TBDNI.Text.Length < 7 Then
                 MessageBox.Show("El DNI debe tener al menos 7 dígitos.", "Validación",
                                 MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 TBDNI.Focus()
+            End If
+        End If
+    End Sub
+
+    ' --- VALIDACIÓN AL PERDER EL FOCO PARA TELÉFONO ---
+    Private Sub TBTelefono_Leave(sender As Object, e As EventArgs) Handles TBTelefono.Leave
+        If Not String.IsNullOrWhiteSpace(TBTelefono.Text) Then
+            If TBTelefono.Text.Length < 8 Then
+                MessageBox.Show("El teléfono debe tener al menos 8 dígitos.", "Validación",
+                                MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                TBTelefono.Focus()
+            End If
+        End If
+    End Sub
+
+    ' --- VALIDACIÓN AL PERDER EL FOCO PARA NOMBRE ---
+    Private Sub TBNombre_Leave(sender As Object, e As EventArgs) Handles TBNombre.Leave
+        If Not String.IsNullOrWhiteSpace(TBNombre.Text) Then
+            ' Normalizar espacios múltiples
+            If TBNombre.Text.Contains("  ") Then
+                TBNombre.Text = System.Text.RegularExpressions.Regex.Replace(TBNombre.Text.Trim(), "\s+", " ")
+                TBNombre.SelectionStart = TBNombre.Text.Length
+            End If
+
+            ' Validar longitud mínima
+            If TBNombre.Text.Trim().Length < 5 Then
+                MessageBox.Show("El nombre debe tener al menos 5 caracteres.", "Validación",
+                                MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                TBNombre.Focus()
+            End If
+
+            ' Validar que tenga nombre y apellido
+            If Not TBNombre.Text.Trim().Contains(" ") Then
+                MessageBox.Show("Por favor ingrese nombre y apellido.", "Validación",
+                                MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                TBNombre.Focus()
             End If
         End If
     End Sub
