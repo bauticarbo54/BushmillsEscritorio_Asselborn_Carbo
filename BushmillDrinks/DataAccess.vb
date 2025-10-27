@@ -3,6 +3,22 @@ Imports System.Data.SqlClient
 Imports System.Security.Cryptography
 Imports System.Text
 
+Module Conexion
+    Public Conex As New SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings("BushmillDb").ConnectionString)
+
+    Public Sub AbrirConexion()
+        If Conex.State = ConnectionState.Closed Then
+            Conex.Open()
+        End If
+    End Sub
+
+    Public Sub CerrarConexion()
+        If Conex.State = ConnectionState.Open Then
+            Conex.Close()
+        End If
+    End Sub
+End Module
+
 Public Module DataAccess
 
     Private ReadOnly ConnStr As String =
@@ -182,6 +198,95 @@ Public Module DataAccess
             Return Convert.ToInt32(cmd.ExecuteScalar())
         End Using
     End Function
+
+
+
+    '================== PRODUCTOS ==================
+
+    Public Function GetProductos() As DataTable
+        Const sql As String = "
+        SELECT p.id_producto,
+               p.codigo_barras,
+               m.nombre AS marca,
+               c.nombre AS categoria,
+               p.volumen,
+               p.graduacion,
+               p.precio,
+               p.stock,
+               p.proveedor,
+               p.estado
+        FROM dbo.Producto p
+        INNER JOIN dbo.Marca m ON p.id_marca = m.id_marca
+        INNER JOIN dbo.Categoria c ON p.id_categoria = c.id_categoria
+        ORDER BY p.codigo_barras;"
+        Using cn As New SqlConnection(ConnStr),
+              da As New SqlDataAdapter(sql, cn)
+            Dim dt As New DataTable()
+            da.Fill(dt)
+            Return dt
+        End Using
+    End Function
+
+    Public Sub InsertProducto(codigo As String, idMarca As Integer, idCategoria As Integer,
+                              volumen As Decimal, graduacion As Decimal,
+                              precio As Decimal, stock As Integer,
+                              proveedor As String)
+        Const sql As String = "
+        INSERT INTO dbo.Producto
+            (codigo_barras, id_marca, id_categoria, volumen, graduacion, precio, stock, proveedor, estado)
+        VALUES
+            (@codigo, @marca, @categoria, @volumen, @graduacion, @precio, @stock, @proveedor, 'A');"
+        Using cn As New SqlConnection(ConnStr),
+              cmd As New SqlCommand(sql, cn)
+            cmd.Parameters.AddWithValue("@codigo", codigo)
+            cmd.Parameters.AddWithValue("@marca", idMarca)
+            cmd.Parameters.AddWithValue("@categoria", idCategoria)
+            cmd.Parameters.AddWithValue("@volumen", volumen)
+            cmd.Parameters.AddWithValue("@graduacion", graduacion)
+            cmd.Parameters.AddWithValue("@precio", precio)
+            cmd.Parameters.AddWithValue("@stock", stock)
+            cmd.Parameters.AddWithValue("@proveedor", proveedor)
+            cn.Open()
+            cmd.ExecuteNonQuery()
+        End Using
+    End Sub
+
+    Public Sub UpdateProducto(idProducto As Integer, codigo As String, idMarca As Integer, idCategoria As Integer,
+                              volumen As Decimal, graduacion As Decimal,
+                              precio As Decimal, stock As Integer,
+                              proveedor As String)
+        Const sql As String = "
+        UPDATE dbo.Producto
+        SET codigo_barras=@codigo, id_marca=@marca, id_categoria=@categoria,
+            volumen=@volumen, graduacion=@graduacion, precio=@precio,
+            stock=@stock, proveedor=@proveedor
+        WHERE id_producto=@id;"
+        Using cn As New SqlConnection(ConnStr),
+              cmd As New SqlCommand(sql, cn)
+            cmd.Parameters.AddWithValue("@codigo", codigo)
+            cmd.Parameters.AddWithValue("@marca", idMarca)
+            cmd.Parameters.AddWithValue("@categoria", idCategoria)
+            cmd.Parameters.AddWithValue("@volumen", volumen)
+            cmd.Parameters.AddWithValue("@graduacion", graduacion)
+            cmd.Parameters.AddWithValue("@precio", precio)
+            cmd.Parameters.AddWithValue("@stock", stock)
+            cmd.Parameters.AddWithValue("@proveedor", proveedor)
+            cmd.Parameters.AddWithValue("@id", idProducto)
+            cn.Open()
+            cmd.ExecuteNonQuery()
+        End Using
+    End Sub
+
+    Public Sub CambiarEstadoProducto(idProducto As Integer, activar As Boolean)
+        Const sql = "UPDATE dbo.Producto SET estado = @e WHERE id_producto=@id;"
+        Using cn As New SqlConnection(ConnStr),
+              cmd As New SqlCommand(sql, cn)
+            cmd.Parameters.AddWithValue("@e", If(activar, "A"c, "S"c))
+            cmd.Parameters.AddWithValue("@id", idProducto)
+            cn.Open()
+            cmd.ExecuteNonQuery()
+        End Using
+    End Sub
 
 End Module
 

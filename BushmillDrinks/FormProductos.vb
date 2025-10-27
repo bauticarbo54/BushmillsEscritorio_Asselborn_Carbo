@@ -1,4 +1,6 @@
-﻿Public Class FormProductos
+﻿Imports System.Data.SqlClient
+
+Public Class FormProductos
 
     Private productos As DataTable
     Private codigoBarraOriginal As String = "" ' Variable para guardar el código original al editar
@@ -10,25 +12,88 @@
         ' Configurar validación de campos
         ConfigurarValidaciones()
 
-        ' Crear la tabla solo si aún no existe
-        If productos Is Nothing Then
-            PrepararTabla()
-            DGVProductos.DataSource = productos
-        End If
+
+        CargarProductosDesdeBD()
+        FormatearDataGridView()
+
+        CargarMarcas()
+        CargarCategorias()
+
 
         ' Formato de columnas
         FormatearDataGridView()
 
         ' Datos de prueba para combos
-        If CBCategoria.Items.Count = 0 Then
-            CBCategoria.Items.AddRange({"Vino", "Cerveza", "Whisky", "Vodka", "Gin", "Ron", "Fernet", "Aperitivo"})
-        End If
-        If CBMarca.Items.Count = 0 Then
-            CBMarca.Items.AddRange({"Luigi Bosca", "Quilmes", "Johnnie Walker", "Absolut", "Bacardi", "Tanqueray", "Branca", "Campari"})
-        End If
+        'If CBCategoria.Items.Count = 0 Then
+        '    CBCategoria.Items.AddRange({"Vino", "Cerveza", "Whisky", "Vodka", "Gin", "Ron", "Fernet", "Aperitivo"})
+        'End If
+        'If CBMarca.Items.Count = 0 Then
+        '    CBMarca.Items.AddRange({"Luigi Bosca", "Quilmes", "Johnnie Walker", "Absolut", "Bacardi", "Tanqueray", "Branca", "Campari"})
+        'End If
 
         ' Configurar controles
         ConfigurarControles()
+
+
+
+
+    End Sub
+
+    Private Sub CargarProductosDesdeBD()
+        Try
+            AbrirConexion()
+            Dim query As String = "SELECT * FROM Producto"
+            Dim adaptador As New SqlDataAdapter(query, Conex)
+            Dim dt As New DataTable()
+            adaptador.Fill(dt)
+            productos = dt
+            DGVProductos.DataSource = productos
+            CerrarConexion()
+        Catch ex As Exception
+            MessageBox.Show("Error al cargar productos: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    Private Sub CargarMarcas()
+        Try
+            Conex.Open()
+            Dim cmd As New SqlCommand("SELECT id_marca, nombre FROM Marca", Conex)
+            Dim reader As SqlDataReader = cmd.ExecuteReader()
+
+            Dim dt As New DataTable()
+            dt.Load(reader)
+
+            CBMarca.DataSource = dt
+            CBMarca.DisplayMember = "nombre"   ' Lo que se muestra
+            CBMarca.ValueMember = "id_marca"         ' Valor interno
+
+            Conex.Close()
+        Catch ex As Exception
+            MessageBox.Show("Error al cargar marcas: " & ex.Message)
+        Finally
+            If Conex.State = ConnectionState.Open Then Conex.Close()
+        End Try
+    End Sub
+
+    Private Sub CargarCategorias()
+        Try
+            Conex.Open()
+            Dim cmd As New SqlCommand("SELECT id_categoria, nombre FROM Categoria", Conex)
+            Dim reader As SqlDataReader = cmd.ExecuteReader()
+
+            Dim dt As New DataTable()
+            dt.Load(reader)
+
+            CBCategoria.DataSource = dt
+            CBCategoria.DisplayMember = "nombre"
+            CBCategoria.ValueMember = "id_categoria"
+
+            Conex.Close()
+        Catch ex As Exception
+            MessageBox.Show("Error al cargar categorías: " & ex.Message)
+        Finally
+            If Conex.State = ConnectionState.Open Then Conex.Close()
+        End Try
     End Sub
 
     Private Sub ConfigurarValidaciones()
@@ -291,7 +356,7 @@
 
         ' Verificar si ya existe (solo para agregar)
         Dim codigo As String = TBCodBarra.Text.Trim()
-        Dim encontrado = productos.Select($"CodigoBarra = '{codigo.Replace("'", "''")}'")
+        Dim encontrado = productos.Select($"codigo_barras = '{codigo.Replace("'", "''")}'")
         If encontrado.Length > 0 Then
             MessageBox.Show("Este código de barras ya está registrado.", "Validación",
                           MessageBoxButtons.OK, MessageBoxIcon.Warning)
@@ -385,26 +450,29 @@
         End If
 
         Try
-            productos.Rows.Add(
-                TBCodBarra.Text.Trim(),
-                CBCategoria.Text,
-                CBMarca.Text,
-                NUDPrecio.Value,
-                TBVolumen.Text.Trim() + " cm³",
-                TBGraduacion.Text.Trim(),
-                TBProveedor.Text.Trim(),
-                CInt(NUDStock.Value),
-                "Activo"
-            )
+            AbrirConexion()
+            Dim query As String = "INSERT INTO Producto (codigo_barras, id_categoria, id_marca, precio, volumen, graduacion, proveedor, stock, estado)
+                           VALUES (@codigo, @categoria, @marca, @precio, @volumen, @graduacion, @proveedor, @stock, 'Activo')"
+            Dim cmd As New SqlCommand(query, Conex)
+            cmd.Parameters.AddWithValue("@codigo", TBCodBarra.Text.Trim())
+            cmd.Parameters.AddWithValue("@categoria", CBCategoria.Text)
+            cmd.Parameters.AddWithValue("@marca", CBMarca.Text)
+            cmd.Parameters.AddWithValue("@precio", NUDPrecio.Value)
+            cmd.Parameters.AddWithValue("@volumen", TBVolumen.Text.Trim() & " cm³")
+            cmd.Parameters.AddWithValue("@graduacion", TBGraduacion.Text.Trim())
+            cmd.Parameters.AddWithValue("@proveedor", TBProveedor.Text.Trim())
+            cmd.Parameters.AddWithValue("@stock", CInt(NUDStock.Value))
 
-            MessageBox.Show("Producto agregado correctamente.", "Éxito",
-                          MessageBoxButtons.OK, MessageBoxIcon.Information)
+            cmd.ExecuteNonQuery()
+            CerrarConexion()
+
+            MessageBox.Show("Producto agregado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information)
+
+            CargarProductosDesdeBD()
             LimpiarCampos()
-            TBCodBarra.Focus()
 
         Catch ex As Exception
-            MessageBox.Show($"Error al agregar producto: {ex.Message}", "Error",
-                          MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show("Error al agregar producto: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -421,24 +489,28 @@
         End If
 
         Try
-            Dim row As DataGridViewRow = DGVProductos.SelectedRows(0)
+            AbrirConexion()
+            Dim query As String = "UPDATE Producto SET categoria=@categoria, marca=@marca, precio=@precio, volumen=@volumen,
+                           graduacion=@graduacion, proveedor=@proveedor, stock=@stock WHERE codigo_barra=@codigo"
+            Dim cmd As New SqlCommand(query, Conex)
+            cmd.Parameters.AddWithValue("@codigo", TBCodBarra.Text.Trim())
+            cmd.Parameters.AddWithValue("@categoria", CBCategoria.Text)
+            cmd.Parameters.AddWithValue("@marca", CBMarca.Text)
+            cmd.Parameters.AddWithValue("@precio", NUDPrecio.Value)
+            cmd.Parameters.AddWithValue("@volumen", TBVolumen.Text.Trim() & " cm³")
+            cmd.Parameters.AddWithValue("@graduacion", TBGraduacion.Text.Trim())
+            cmd.Parameters.AddWithValue("@proveedor", TBProveedor.Text.Trim())
+            cmd.Parameters.AddWithValue("@stock", CInt(NUDStock.Value))
+            cmd.ExecuteNonQuery()
+            CerrarConexion()
 
-            row.Cells("CodigoBarra").Value = TBCodBarra.Text.Trim()
-            row.Cells("Categoria").Value = CBCategoria.Text
-            row.Cells("Marca").Value = CBMarca.Text
-            row.Cells("Precio").Value = NUDPrecio.Value
-            row.Cells("Volumen").Value = TBVolumen.Text.Trim() + " cm³"
-            row.Cells("Graduacion").Value = TBGraduacion.Text.Trim()
-            row.Cells("Proveedor").Value = TBProveedor.Text.Trim()
-            row.Cells("Stock").Value = CInt(NUDStock.Value)
+            MessageBox.Show("Producto actualizado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
-            MessageBox.Show("Producto actualizado correctamente.", "Éxito",
-                          MessageBoxButtons.OK, MessageBoxIcon.Information)
+            CargarProductosDesdeBD()
             LimpiarCampos()
 
         Catch ex As Exception
-            MessageBox.Show($"Error al actualizar producto: {ex.Message}", "Error",
-                          MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show("Error al actualizar producto: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -452,24 +524,25 @@
 
         Try
             Dim row As DataGridViewRow = DGVProductos.SelectedRows(0)
-            Dim estadoActual As String = row.Cells("Estado").Value.ToString()
-            Dim producto As String = row.Cells("Marca").Value.ToString()
+            Dim codigo As String = row.Cells("codigo_barra").Value.ToString()
+            Dim estadoActual As String = row.Cells("estado").Value.ToString()
 
-            If estadoActual = "Activo" Then
-                row.Cells("Estado").Value = "Inactivo"
-                ActualizarBotonSuspender("Inactivo")
-                MessageBox.Show($"El producto '{producto}' fue suspendido.", "Información",
-                              MessageBoxButtons.OK, MessageBoxIcon.Information)
-            Else
-                row.Cells("Estado").Value = "Activo"
-                ActualizarBotonSuspender("Activo")
-                MessageBox.Show($"El producto '{producto}' fue reactivado.", "Información",
-                              MessageBoxButtons.OK, MessageBoxIcon.Information)
-            End If
+            Dim nuevoEstado As String = If(estadoActual = "Activo", "Inactivo", "Activo")
+
+            AbrirConexion()
+            Dim query As String = "UPDATE Producto SET estado=@estado WHERE codigo_barra=@codigo"
+            Dim cmd As New SqlCommand(query, Conex)
+            cmd.Parameters.AddWithValue("@estado", nuevoEstado)
+            cmd.Parameters.AddWithValue("@codigo", codigo)
+            cmd.ExecuteNonQuery()
+            CerrarConexion()
+
+            MessageBox.Show($"El producto fue actualizado a '{nuevoEstado}'.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information)
+
+            CargarProductosDesdeBD()
 
         Catch ex As Exception
-            MessageBox.Show($"Error al cambiar estado: {ex.Message}", "Error",
-                          MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show($"Error al cambiar estado: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -566,5 +639,13 @@
             BSuspender.BackColor = Color.Green
             BSuspender.ForeColor = Color.White
         End If
+    End Sub
+
+    Private Sub CBMarca_SelectedIndexChanged(sender As Object, e As EventArgs) Handles CBMarca.SelectedIndexChanged
+
+    End Sub
+
+    Private Sub CBCategoria_SelectedIndexChanged(sender As Object, e As EventArgs) Handles CBCategoria.SelectedIndexChanged
+
     End Sub
 End Class

@@ -1,14 +1,112 @@
-## Ignore build outputs
-[Bb]in/
-[Oo]bj/
+# =========================
+# Visual Studio y .NET
+# =========================
 
-## Ignore NuGet packages
-*.nupkg
-
-## Ignore user-specific files
-*.user
+# Archivos de usuario
 *.suo
+*.user
 *.userosscache
+*.sln.docstates
 
-## Ignore results of code analysis
-*.lastcodeanalysis
+# Archivos temporales de compilación
+bin/
+obj/
+out/
+[Bb]uild/
+[Ll]og/
+
+# Archivos de dependencias
+packages/
+*.nupkg
+*.snupkg
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Archivos temporales de VS
+.vs/
+.vscode/
+*.dbmdl
+*.dbproj.schemaview
+
+# Configuración local
+appsettings.Development.json
+secrets.json
+
+# Archivos generados
+*.tmp
+*.bak
+*.swp
+*.sln.iml
+*.pdb
+
+# Cache y datos temporales
+*.cache
+*.log
+*.tlog
+
+# Archivos de test o coverage
+TestResult*/
+[Bb]uild[Ll]og.*
+*.coverage
+*.coveragexml
+*.codecov
+*.gcov
+*.opencover.xml
+coverage*.json
+coverage*.xml
+
+# Archivos de publicación o empaquetado
+publish/
+dist/
+*.publish.xml
+
+# Archivos de configuración local de usuario
+*.launchSettings.json
+
+# Archivos de IDEs comunes
+.idea/
+*.iml
+
+# Archivos de backup de VS
+*.db-shm
+*.db-wal
+*.db
+
+# =========================
+# Sistema operativo
+# =========================
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# =========================
+# Git
+# =========================
+
+# Archivos de merge temporales
+*.orig
+*.rej
+
+# Evitar conflictos en rebase
+*.BACKUP.*
+*.BASE.*
+*.LOCAL.*
+*.REMOTE.*
+
+# =========================
+# Archivos personalizados del proyecto
+# =========================
+
+# Tus carpetas o archivos locales
+backup/
+logs/
+temp/
