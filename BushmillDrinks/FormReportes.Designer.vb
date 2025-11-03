@@ -28,28 +28,27 @@ Partial Class FormReportes
         LFiltrar = New Label()
         DPDesde = New DateTimePicker()
         DPHasta = New DateTimePicker()
-        Panel2 = New Panel()
         Panel3 = New Panel()
         TableLayoutPanel2 = New TableLayoutPanel()
         TC = New TabControl()
-        TPGerencia = New TabPage()
-        DGVGerencia = New DataGridView()
-        TPAdmin = New TabPage()
-        DGVAdmin = New DataGridView()
         TPVendedor = New TabPage()
         DGVVendedor = New DataGridView()
+        TPAdmin = New TabPage()
+        DGVAdmin = New DataGridView()
+        TPGerencia = New TabPage()
+        DGVGerencia = New DataGridView()
+        Panel2 = New Panel()
         Panel1.SuspendLayout()
         TableLayoutPanel1.SuspendLayout()
-        Panel2.SuspendLayout()
         Panel3.SuspendLayout()
-        TableLayoutPanel2.SuspendLayout()
         TC.SuspendLayout()
-        TPGerencia.SuspendLayout()
-        CType(DGVGerencia, ComponentModel.ISupportInitialize).BeginInit()
-        TPAdmin.SuspendLayout()
-        CType(DGVAdmin, ComponentModel.ISupportInitialize).BeginInit()
         TPVendedor.SuspendLayout()
         CType(DGVVendedor, ComponentModel.ISupportInitialize).BeginInit()
+        TPAdmin.SuspendLayout()
+        CType(DGVAdmin, ComponentModel.ISupportInitialize).BeginInit()
+        TPGerencia.SuspendLayout()
+        CType(DGVGerencia, ComponentModel.ISupportInitialize).BeginInit()
+        Panel2.SuspendLayout()
         SuspendLayout()
         ' 
         ' Panel1
@@ -119,16 +118,6 @@ Partial Class FormReportes
         DPHasta.Size = New Size(193, 27)
         DPHasta.TabIndex = 8
         ' 
-        ' Panel2
-        ' 
-        Panel2.BackColor = SystemColors.ControlDark
-        Panel2.Controls.Add(Panel3)
-        Panel2.Dock = DockStyle.Fill
-        Panel2.Location = New Point(0, 125)
-        Panel2.Name = "Panel2"
-        Panel2.Size = New Size(800, 325)
-        Panel2.TabIndex = 1
-        ' 
         ' Panel3
         ' 
         Panel3.BackColor = Color.LightGray
@@ -136,7 +125,7 @@ Partial Class FormReportes
         Panel3.Dock = DockStyle.Top
         Panel3.Location = New Point(0, 0)
         Panel3.Name = "Panel3"
-        Panel3.Size = New Size(800, 125)
+        Panel3.Size = New Size(800, 10)
         Panel3.TabIndex = 10
         ' 
         ' TableLayoutPanel2
@@ -144,9 +133,7 @@ Partial Class FormReportes
         TableLayoutPanel2.ColumnCount = 1
         TableLayoutPanel2.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50F))
         TableLayoutPanel2.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50F))
-        TableLayoutPanel2.Controls.Add(TC, 0, 0)
-        TableLayoutPanel2.Dock = DockStyle.Fill
-        TableLayoutPanel2.Location = New Point(0, 0)
+        TableLayoutPanel2.Location = New Point(731, 45)
         TableLayoutPanel2.Name = "TableLayoutPanel2"
         TableLayoutPanel2.RowCount = 1
         TableLayoutPanel2.RowStyles.Add(New RowStyle(SizeType.Percent, 50F))
@@ -160,53 +147,11 @@ Partial Class FormReportes
         TC.Controls.Add(TPAdmin)
         TC.Controls.Add(TPVendedor)
         TC.Dock = DockStyle.Fill
-        TC.Location = New Point(3, 3)
+        TC.Location = New Point(0, 10)
         TC.Name = "TC"
         TC.SelectedIndex = 0
-        TC.Size = New Size(794, 119)
+        TC.Size = New Size(800, 315)
         TC.TabIndex = 0
-        ' 
-        ' TPGerencia
-        ' 
-        TPGerencia.Controls.Add(DGVGerencia)
-        TPGerencia.Location = New Point(4, 29)
-        TPGerencia.Name = "TPGerencia"
-        TPGerencia.Padding = New Padding(3)
-        TPGerencia.Size = New Size(786, 86)
-        TPGerencia.TabIndex = 0
-        TPGerencia.Text = "Gerencia"
-        TPGerencia.UseVisualStyleBackColor = True
-        ' 
-        ' DGVGerencia
-        ' 
-        DGVGerencia.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        DGVGerencia.Dock = DockStyle.Fill
-        DGVGerencia.Location = New Point(3, 3)
-        DGVGerencia.Name = "DGVGerencia"
-        DGVGerencia.RowHeadersWidth = 51
-        DGVGerencia.Size = New Size(780, 80)
-        DGVGerencia.TabIndex = 0
-        ' 
-        ' TPAdmin
-        ' 
-        TPAdmin.Controls.Add(DGVAdmin)
-        TPAdmin.Location = New Point(4, 29)
-        TPAdmin.Name = "TPAdmin"
-        TPAdmin.Padding = New Padding(3)
-        TPAdmin.Size = New Size(786, 86)
-        TPAdmin.TabIndex = 1
-        TPAdmin.Text = "Administracion"
-        TPAdmin.UseVisualStyleBackColor = True
-        ' 
-        ' DGVAdmin
-        ' 
-        DGVAdmin.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        DGVAdmin.Dock = DockStyle.Fill
-        DGVAdmin.Location = New Point(3, 3)
-        DGVAdmin.Name = "DGVAdmin"
-        DGVAdmin.RowHeadersWidth = 51
-        DGVAdmin.Size = New Size(780, 80)
-        DGVAdmin.TabIndex = 0
         ' 
         ' TPVendedor
         ' 
@@ -214,7 +159,7 @@ Partial Class FormReportes
         TPVendedor.Location = New Point(4, 29)
         TPVendedor.Name = "TPVendedor"
         TPVendedor.Padding = New Padding(3)
-        TPVendedor.Size = New Size(786, 86)
+        TPVendedor.Size = New Size(786, 75)
         TPVendedor.TabIndex = 2
         TPVendedor.Text = "Vendedor"
         TPVendedor.UseVisualStyleBackColor = True
@@ -226,8 +171,61 @@ Partial Class FormReportes
         DGVVendedor.Location = New Point(3, 3)
         DGVVendedor.Name = "DGVVendedor"
         DGVVendedor.RowHeadersWidth = 51
-        DGVVendedor.Size = New Size(780, 80)
+        DGVVendedor.Size = New Size(780, 69)
         DGVVendedor.TabIndex = 0
+        ' 
+        ' TPAdmin
+        ' 
+        TPAdmin.Controls.Add(DGVAdmin)
+        TPAdmin.Location = New Point(4, 29)
+        TPAdmin.Name = "TPAdmin"
+        TPAdmin.Padding = New Padding(3)
+        TPAdmin.Size = New Size(786, 75)
+        TPAdmin.TabIndex = 1
+        TPAdmin.Text = "Administracion"
+        TPAdmin.UseVisualStyleBackColor = True
+        ' 
+        ' DGVAdmin
+        ' 
+        DGVAdmin.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        DGVAdmin.Dock = DockStyle.Fill
+        DGVAdmin.Location = New Point(3, 3)
+        DGVAdmin.Name = "DGVAdmin"
+        DGVAdmin.RowHeadersWidth = 51
+        DGVAdmin.Size = New Size(780, 69)
+        DGVAdmin.TabIndex = 0
+        ' 
+        ' TPGerencia
+        ' 
+        TPGerencia.Controls.Add(DGVGerencia)
+        TPGerencia.Location = New Point(4, 29)
+        TPGerencia.Name = "TPGerencia"
+        TPGerencia.Padding = New Padding(3)
+        TPGerencia.Size = New Size(792, 282)
+        TPGerencia.TabIndex = 0
+        TPGerencia.Text = "Gerencia"
+        TPGerencia.UseVisualStyleBackColor = True
+        ' 
+        ' DGVGerencia
+        ' 
+        DGVGerencia.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        DGVGerencia.Dock = DockStyle.Fill
+        DGVGerencia.Location = New Point(3, 3)
+        DGVGerencia.Name = "DGVGerencia"
+        DGVGerencia.RowHeadersWidth = 51
+        DGVGerencia.Size = New Size(786, 276)
+        DGVGerencia.TabIndex = 0
+        ' 
+        ' Panel2
+        ' 
+        Panel2.BackColor = SystemColors.ControlDark
+        Panel2.Controls.Add(TC)
+        Panel2.Controls.Add(Panel3)
+        Panel2.Dock = DockStyle.Fill
+        Panel2.Location = New Point(0, 125)
+        Panel2.Name = "Panel2"
+        Panel2.Size = New Size(800, 325)
+        Panel2.TabIndex = 1
         ' 
         ' FormReportes
         ' 
@@ -241,21 +239,19 @@ Partial Class FormReportes
         Panel1.ResumeLayout(False)
         TableLayoutPanel1.ResumeLayout(False)
         TableLayoutPanel1.PerformLayout()
-        Panel2.ResumeLayout(False)
         Panel3.ResumeLayout(False)
-        TableLayoutPanel2.ResumeLayout(False)
         TC.ResumeLayout(False)
-        TPGerencia.ResumeLayout(False)
-        CType(DGVGerencia, ComponentModel.ISupportInitialize).EndInit()
-        TPAdmin.ResumeLayout(False)
-        CType(DGVAdmin, ComponentModel.ISupportInitialize).EndInit()
         TPVendedor.ResumeLayout(False)
         CType(DGVVendedor, ComponentModel.ISupportInitialize).EndInit()
+        TPAdmin.ResumeLayout(False)
+        CType(DGVAdmin, ComponentModel.ISupportInitialize).EndInit()
+        TPGerencia.ResumeLayout(False)
+        CType(DGVGerencia, ComponentModel.ISupportInitialize).EndInit()
+        Panel2.ResumeLayout(False)
         ResumeLayout(False)
     End Sub
 
     Friend WithEvents Panel1 As Panel
-    Friend WithEvents Panel2 As Panel
     Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
     Friend WithEvents BActualizar As Button
     Friend WithEvents LFiltrar As Label
@@ -265,9 +261,10 @@ Partial Class FormReportes
     Friend WithEvents TableLayoutPanel2 As TableLayoutPanel
     Friend WithEvents TC As TabControl
     Friend WithEvents TPGerencia As TabPage
-    Friend WithEvents TPAdmin As TabPage
     Friend WithEvents DGVGerencia As DataGridView
-    Friend WithEvents TPVendedor As TabPage
+    Friend WithEvents TPAdmin As TabPage
     Friend WithEvents DGVAdmin As DataGridView
+    Friend WithEvents TPVendedor As TabPage
     Friend WithEvents DGVVendedor As DataGridView
+    Friend WithEvents Panel2 As Panel
 End Class

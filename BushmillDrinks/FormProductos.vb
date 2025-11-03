@@ -527,11 +527,13 @@ Public Class FormProductos
             Dim ConnStr As String = System.Configuration.ConfigurationManager.ConnectionStrings("BushmillDb").ConnectionString
 
             Using cn As New SqlConnection(ConnStr)
-                Dim query As String = "UPDATE Producto SET nombre=@nombre, id_categoria=@id_categoria, id_marca=@id_marca, precio=@precio, " &
-                                      "volumen=@volumen, graduacion=@graduacion, proveedor=@proveedor, stock=@stock " &
-                                      "WHERE codigo_barras=@codigo"
+                Dim query As String = "UPDATE Producto SET codigo_barras=@nuevoCodigo, nombre=@nombre, id_categoria=@id_categoria, id_marca=@id_marca, precio=@precio, " &
+                      "volumen=@volumen, graduacion=@graduacion, proveedor=@proveedor, stock=@stock " &
+                      "WHERE codigo_barras=@codigoOriginal"
+
                 Dim cmd As New SqlCommand(query, cn)
-                cmd.Parameters.AddWithValue("@codigo", TBCodBarra.Text.Trim())
+                cmd.Parameters.AddWithValue("@nuevoCodigo", TBCodBarra.Text.Trim())
+                cmd.Parameters.AddWithValue("@codigoOriginal", codigoBarraOriginal)
                 cmd.Parameters.AddWithValue("@nombre", TBNombre.Text.Trim()) ' Nuevo parámetro
                 cmd.Parameters.AddWithValue("@id_categoria", idCategoria)
                 cmd.Parameters.AddWithValue("@id_marca", idMarca)
@@ -543,6 +545,7 @@ Public Class FormProductos
 
                 cn.Open()
                 cmd.ExecuteNonQuery()
+                codigoBarraOriginal = TBCodBarra.Text.Trim()
             End Using
 
             MessageBox.Show("Producto actualizado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information)
@@ -593,20 +596,27 @@ Public Class FormProductos
             Try
                 Dim row As DataGridViewRow = DGVProductos.Rows(e.RowIndex)
 
-                ' Guardar el código original para edición
                 codigoBarraOriginal = row.Cells("codigo_barras").Value.ToString()
 
                 TBCodBarra.Text = codigoBarraOriginal
-                TBNombre.Text = row.Cells("nombre").Value.ToString() ' Nuevo campo
+                TBNombre.Text = row.Cells("nombre").Value.ToString()
                 CBCategoria.Text = row.Cells("categoria").Value.ToString()
                 CBMarca.Text = row.Cells("marca").Value.ToString()
                 NUDPrecio.Value = Convert.ToDecimal(row.Cells("precio").Value)
-                TBVolumen.Text = row.Cells("volumen").Value.ToString()
-                TBGraduacion.Text = row.Cells("graduacion").Value.ToString()
+
+                ' ✅ Conversión segura y formateada de volumen y graduación
+                Dim vol As Decimal = 0
+                Dim grad As Decimal = 0
+
+                Decimal.TryParse(row.Cells("volumen").Value.ToString(), vol)
+                Decimal.TryParse(row.Cells("graduacion").Value.ToString(), grad)
+
+                TBVolumen.Text = vol.ToString("0.##") ' muestra hasta 2 decimales
+                TBGraduacion.Text = grad.ToString("0.##")
+
                 TBProveedor.Text = row.Cells("proveedor").Value.ToString()
                 NUDStock.Value = Convert.ToDecimal(row.Cells("stock").Value)
 
-                ' Actualizar texto del botón según estado
                 Dim estadoActual As String = row.Cells("estado").Value.ToString()
                 ActualizarBotonSuspender(estadoActual)
 
@@ -615,6 +625,7 @@ Public Class FormProductos
             End Try
         End If
     End Sub
+
 
     ' --- FORMATEAR FILAS SEGÚN ESTADO Y STOCK ---
     Private Sub DGVProductos_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DGVProductos.CellFormatting
